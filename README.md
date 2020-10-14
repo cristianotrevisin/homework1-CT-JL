@@ -23,13 +23,16 @@ of built-in numpy operation.
 It takes as arguments:
 
 - `--filename`, `-f` : The path to file where system Ax=b is stored.
-- `--plot`, `-p`: boolean if we output a file containing a plot of the iteration.
+- `--plot`, `-p`:  'yes' if we output a file containing a plot of the iteration.
 - `--initial_guess`, `-g`: The path to file where initial guess x0 is stored.
 - `--tolerance` `-t` : Tolerance required for the solver, to compute only the necessary iterations.
 
+The file format of the system Ax=b is a concatenation of A and b, in csv format. The vector
+b is added as the last line of the csv, which otherwise contains a square matrix.
+
 ### Example
 
-It is possibe to run an example:
+It is possible to run an example:
 
 ```
 python conjugate_gradient.py -f example/Ab.csv
