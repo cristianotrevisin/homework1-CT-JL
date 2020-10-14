@@ -1,15 +1,17 @@
-"""Resolution of Homework 1 part 2 by Cristiano Trevisin and Joseph Lemaitre."""
+"""
+    Resolution of Homework 1 part 2 by Cristiano Trevisin and Joseph Lemaitre.
+"""
 
 import numpy as np
-from scipy.optimize import minimize
+import scipy.optimize
 import matplotlib.pyplot as plt
 from matplotlib import cm, rc
 import argparse
 
 
-class cg:
+class ConjugateGradient:
     """Class to allow resolution of the conjugate gradient."""
-    
+
     def __init__(self):
         """
         Initialize of the CG class. Reads the matrix from the input and calculates the minimum through the conjugate gradient method.
@@ -20,35 +22,36 @@ class cg:
 
         """
         parser = argparse.ArgumentParser(description="Optimizer of a quadratic function S(x)")
-        parser.add_argument("--filename", "-f", nargs='?', help="path to file where system Ax=b is stored", default = "input.csv", type=str)
-        parser.add_argument("--plot", "-p", nargs='?', help="if plot",default = "yes", type=str)
-        parser.add_argument("--initial_guess", "-g", nargs='?', help="path to file where initual guess x0 is stored",default = None, type=str)
-        parser.add_argument("--tolerance", "-t", nargs='?', help="tolerance required",default = 1e-9, type=float)
-        parser.add_argument("--maximum_iterations", "-i", nargs='?', help="maximum number of allowed iterations",default = 1000, type=int)
+        parser.add_argument("--filename", "-f", nargs='?', help="path to file where system Ax=b is stored",
+                            default="input.csv", type=str)
+        parser.add_argument("--plot", "-p", nargs='?', help="if plot", default="yes", type=str)
+        parser.add_argument("--initial_guess", "-g", nargs='?', help="path to file where initual guess x0 is stored",
+                            default=None, type=str)
+        parser.add_argument("--tolerance", "-t", nargs='?', help="tolerance required", default=1e-9, type=float)
+        parser.add_argument("--maximum_iterations", "-i", nargs='?', help="maximum number of allowed iterations",
+                            default=1000, type=int)
         args = parser.parse_args()
         filename = args.filename
         self.ifplot = args.plot
-        d = np.genfromtxt(filename, delimiter = ',')
-        
-        self.A = d[0:-1,:]
-        self.b = d[-1,:]
-        
-        
+        d = np.genfromtxt(filename, delimiter=',')
+
+        self.A = d[0:-1, :]
+        self.b = d[-1, :]
+
         if args.initial_guess:
             self.initial_guess = args.initial_guess
-            self.x0 = np.genfromtxt(args.initial_guess, delimiter = ',')
-            self.x0toplot = np.genfromtxt(args.initial_guess, delimiter = ',')
+            self.x0 = np.genfromtxt(args.initial_guess, delimiter=',')
+            self.x0toplot = np.genfromtxt(args.initial_guess, delimiter=',')
         else:
             self.x0 = np.zeros(self.b.shape)
             self.initial_guess = None
             self.x0toplot = np.zeros(self.b.shape)
-        
-        self.tol = args.tolerance                                              # norm tolerance
-        self.itermax = args.maximum_iterations                                 # max num of iterations
-        self.history = []                                                      # init history vector
+
+        self.tol = args.tolerance  # norm tolerance
+        self.itermax = args.maximum_iterations  # max num of iterations
+        self.history = []  # init history vector
         self.check_input()
-        
-        
+
     def check_input(self):
         """
         Check if the input arguments are correct.
@@ -63,17 +66,17 @@ class cg:
         None.
 
         """
-        if(np.abs(self.A-self.A.T)<1e-9).all() == False:
+        if (np.abs(self.A - self.A.T) > 1e-9).all():
             raise Exception("The matrix A is not symmetric. Cannot execute conjugate gradient method")
-        if np.all(np.linalg.eigvals(self.A) > 0) == False:
+        if np.all(np.linalg.eigvals(self.A) < 0):
             raise Exception("The matrix A is not positive definite. Cannot execute conjugate gradient method")
         if self.A.shape[0] != self.A.shape[1]:
             raise Exception("The matrix A is not a square matrix. Check input!")
         if self.A.shape[0] != self.b.shape[0]:
             raise Exception("The matrix A is not compatible with vector b. Check input!")
-        if self.initial_guess != None and self.b.shape != self.x0.shape:
+        if self.initial_guess is not None and self.b.shape != self.x0.shape:
             raise Exception("Initial guess vector is not compatible with the system. Check input!")
-    
+
     def fun(self, x):
         """
         Evaluate the S(x,y) = x.T @ A @ x - x.T @ b function.
@@ -89,8 +92,8 @@ class cg:
             Returns the evaluation of the function.
 
         """
-        return 1/2 * np.einsum('i,ik,k', x, self.A, x) - np.einsum('i,i', x, self.b)
-       
+        return 1 / 2 * np.einsum('i,ik,k', x, self.A, x) - np.einsum('i,i', x, self.b)
+
     def callback(self, xk):
         """
         Append to the history vector the partial iteration points and their evaluation.
@@ -106,7 +109,7 @@ class cg:
 
         """
         self.history.append(np.transpose(np.r_[xk, self.fun(xk)]))
-        
+
     def residual(self, x):
         """
         Calculate the residual of the function.
@@ -122,8 +125,8 @@ class cg:
             the difference b-Ax.
 
         """
-        return self.b-np.einsum('ik,k', self.A, x)
-        
+        return self.b - np.einsum('ik,k', self.A, x)
+
     def conjgrad(self):
         """
         Minimize the problem iteratively through the Conjugate Gradient method.
@@ -151,28 +154,27 @@ class cg:
             pk = r
             k = 1
             xk = self.x0
-            
+
             self.callback(xk)
             while k <= self.itermax:
                 alphak = np.einsum('i,i', r, r) / np.einsum('i,ik,k', pk, self.A, pk)
                 xk += alphak * pk
                 self.callback(xk)
-                
+
                 rkp1 = r - alphak * np.einsum('ik, k', self.A, pk)
-                
+
                 if np.einsum('i,i', rkp1, rkp1) < self.tol:
                     return xk, k
-                
-                betak = np.einsum('i,i',rkp1, rkp1) / np.einsum('i,i', r, r)
-                
+
+                betak = np.einsum('i,i', rkp1, rkp1) / np.einsum('i,i', r, r)
+
                 pk = betak * pk + rkp1
                 r = rkp1
                 k += 1
-                
-            print ("Maximum iterations exceeded")
+
+            print("Maximum iterations exceeded")
             return xk, k
-        
-    
+
     def minimizer_tool(self):
         """
         Calculate the roots of the solution Ax = b through the CG method.
@@ -188,22 +190,21 @@ class cg:
         """
         print("\nMatrix A is \n", self.A)
         print("\nVector b is \n", self.b.T)
-        print("\nThe built-in algorithm is initialized with tolerance "+ "{:.2E}".format(self.tol) + ' and max '+ str(self.itermax) + ' iterations.')
+        print("\nThe built-in algorithm is initialized with tolerance " + "{:.2E}".format(self.tol) + ' and max ' + str(
+            self.itermax) + ' iterations.')
         print("Finding the root of the system Ax = b with the conjugate gradient method...")
-        
-        
 
         self.history.append(np.transpose(np.r_[self.x0, self.fun(self.x0)]))
-        res = minimize(self.fun, self.x0, method='CG',callback=self.callback)
+        res = scipy.optimize.minimize(self.fun, self.x0, method='CG', callback=self.callback)
         self.history_s = self.history
         self.res_s = res.nit
         self.history = []
         res = DotDict()
-        res.x, res.nit= self.conjgrad()
+        res.x, res.nit = self.conjgrad()
         print('\nSolution found in', res.x)
         return res
-            
-    def plot(self,res):
+
+    def plot(self, res):
         """
         Plot the conjugate gradient.
 
@@ -218,40 +219,40 @@ class cg:
 
         """
         if self.ifplot == "yes":
-            self.history = np.concatenate(self.history).reshape(res.nit+1, 3)
-            self.history_s = np.concatenate(self.history).reshape(self.res_s+1, 3)
-            radius = max(abs(res.x-self.x0toplot))+0.5
-            x = np.linspace(res.x[0]-radius,res.x[0]+radius,100)
-            y = np.linspace(res.x[1]-radius,res.x[1]+radius,100)
-            z = np.empty((100,100))
+            self.history = np.concatenate(self.history).reshape(res.nit + 1, 3)
+            self.history_s = np.concatenate(self.history).reshape(self.res_s + 1, 3)
+            radius = max(abs(res.x - self.x0toplot)) + 0.5
+            x = np.linspace(res.x[0] - radius, res.x[0] + radius, 100)
+            y = np.linspace(res.x[1] - radius, res.x[1] + radius, 100)
+            z = np.empty((100, 100))
             for indx, valx in np.ndenumerate(x):
                 for indy, valy in np.ndenumerate(y):
-                    z[indx, indy] = self.fun(np.array([valx,valy]))
-        
-            xx,yy = np.meshgrid(x,y)    
+                    z[indx, indy] = self.fun(np.array([valx, valy]))
+
+            xx, yy = np.meshgrid(x, y)
             fig = plt.figure()
             ax = fig.gca(projection='3d')
             ax.plot_surface(xx, yy, z, cmap=cm.coolwarm,
-                                       alpha = 0.5)
-            ax.contour(xx,yy,z,cmap = cm.coolwarm)
-            ax.view_init(elev = 60., azim = 120)
-            ax.plot3D(self.history[:,0],self.history[:,1],self.history[:,2], '.--r', label = "Own solver")
-            ax.plot3D(self.history_s[:,0],self.history_s[:,1],self.history_s[:,2], ':ob', markersize=.5, label = "Scipy solver")
+                            alpha=0.5)
+            ax.contour(xx, yy, z, cmap=cm.coolwarm)
+            ax.view_init(elev=60., azim=120)
+            ax.plot3D(self.history[:, 0], self.history[:, 1], self.history[:, 2], '.--r', label="Own solver")
+            ax.plot3D(self.history_s[:, 0], self.history_s[:, 1], self.history_s[:, 2], ':ob', markersize=.5,
+                      label="Scipy solver")
             ax.legend()
             ax.grid(False)
-            ax.set_xlabel('x',fontsize = 8)
-            ax.set_ylabel('y',fontsize = 8)
+            ax.set_xlabel('x', fontsize=8)
+            ax.set_ylabel('y', fontsize=8)
             rc('axes', labelsize=10)
-            fig.savefig('conjugate_gradient.pdf',format='pdf')
+            fig.savefig('conjugate_gradient.pdf', format='pdf')
 
 
 class DotDict(dict):
     """Make dictionaries readable in dot format."""
-    
+
     pass
 
 
-cg = cg()
+cg = ConjugateGradient()
 res = cg.minimizer_tool()
 cg.plot(res)
-    
