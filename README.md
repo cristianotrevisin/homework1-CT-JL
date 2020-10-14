@@ -24,8 +24,8 @@ It takes as arguments:
 
 - `--filename`, `-f` : The path to file where system Ax=b is stored.
 - `--plot`, `-p`: boolean if we output a file containing a plot of the iteration.
--`--initial_guess`, `-g`: The path to file where initial guess x0 is stored.
--`--tolerance` `-t` : Tolerance required for the solver, to compute only the necessary iterations.
+- `--initial_guess`, `-g`: The path to file where initial guess x0 is stored.
+- `--tolerance` `-t` : Tolerance required for the solver, to compute only the necessary iterations.
 
 ### Example
 
