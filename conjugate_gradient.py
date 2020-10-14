@@ -1,43 +1,83 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct  8 15:47:31 2020
-
-@author: cristiano
-"""
+"""Resolution of Homework 1 part 2 by Cristiano Trevisin and Joseph Lemaitre."""
 
 import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
 from matplotlib import cm, rc
-from mpl_toolkits import mplot3d
 import argparse
 
 
-
-
-class cg():
-    # DEFINE INPUT ARGUMENTS
+class cg:
+    """Class to allow resolution of the conjugate gradient."""
+    
     def __init__(self):
+        """
+        Initialize of the CG class. Reads the matrix from the input and calculates the minimum through the conjugate gradient method.
+
+        Returns
+        -------
+        None.
+
+        """
         parser = argparse.ArgumentParser(description="Optimizer of a quadratic function S(x)")
         parser.add_argument("--filename", "-f", nargs='?', help="path to file where system Ax=b is stored", default = "input.csv", type=str)
-        parser.add_argument("--method", "-m", nargs='?', help="method for optimization: scipy or else", default = "scipy", type=str)
         parser.add_argument("--plot", "-p", nargs='?', help="if plot",default = "yes", type=str)
+        parser.add_argument("--initial_guess", "-g", nargs='?', help="path to file where initual guess x0 is stored",default = None, type=str)
+        parser.add_argument("--tolerance", "-t", nargs='?', help="tolerance required",default = 1e-9, type=float)
+        parser.add_argument("--maximum_iterations", "-i", nargs='?', help="maximum number of allowed iterations",default = 1000, type=int)
         args = parser.parse_args()
         filename = args.filename
-        self.method = args.method
         self.ifplot = args.plot
         d = np.genfromtxt(filename, delimiter = ',')
+        
         self.A = d[0:-1,:]
         self.b = d[-1,:]
-        self.tol = 1e-5                                                        # norm tolerance
-        self.itermax = 1000                                                    # max num of iterations
-        self.history = []                                                      # init history vector
         
+        
+        if args.initial_guess:
+            self.initial_guess = args.initial_guess
+            self.x0 = np.genfromtxt(args.initial_guess, delimiter = ',')
+            self.x0toplot = np.genfromtxt(args.initial_guess, delimiter = ',')
+        else:
+            self.x0 = np.zeros(self.b.shape)
+            self.initial_guess = None
+            self.x0toplot = np.zeros(self.b.shape)
+        
+        self.tol = args.tolerance                                              # norm tolerance
+        self.itermax = args.maximum_iterations                                 # max num of iterations
+        self.history = []                                                      # init history vector
+        self.check_input()
+        
+        
+    def check_input(self):
+        """
+        Check if the input arguments are correct.
+
+        Raises
+        ------
+        Exception
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
+        if(np.abs(self.A-self.A.T)<1e-9).all() == False:
+            raise Exception("The matrix A is not symmetric. Cannot execute conjugate gradient method")
+        if np.all(np.linalg.eigvals(self.A) > 0) == False:
+            raise Exception("The matrix A is not positive definite. Cannot execute conjugate gradient method")
+        if self.A.shape[0] != self.A.shape[1]:
+            raise Exception("The matrix A is not a square matrix. Check input!")
+        if self.A.shape[0] != self.b.shape[0]:
+            raise Exception("The matrix A is not compatible with vector b. Check input!")
+        if self.initial_guess != None and self.b.shape != self.x0.shape:
+            raise Exception("Initial guess vector is not compatible with the system. Check input!")
     
     def fun(self, x):
         """
-        Evaluates the S(x,y) = x.T @ A @ x - x.T @ b function
+        Evaluate the S(x,y) = x.T @ A @ x - x.T @ b function.
+        
         Parameters
         ----------
         x : numpy array
@@ -53,7 +93,7 @@ class cg():
        
     def callback(self, xk):
         """
-        Appends to the history vector the partial iteration points and their evaluation
+        Append to the history vector the partial iteration points and their evaluation.
 
         Parameters
         ----------
@@ -69,7 +109,7 @@ class cg():
         
     def residual(self, x):
         """
-        Calculates the residual of the function
+        Calculate the residual of the function.
 
         Parameters
         ----------
@@ -84,38 +124,38 @@ class cg():
         """
         return self.b-np.einsum('ik,k', self.A, x)
         
-    def conjgrad(self, x0):
+    def conjgrad(self):
         """
-        Minimizes the problem iteratively through the Conjugate Gradient method.
+        Minimize the problem iteratively through the Conjugate Gradient method.
+        
         The method is based on the algorithm presented in 
         https://en.wikipedia.org/wiki/Conjugate_gradient_method
 
         Parameters
         ----------
-        x0 : TYPE
-            DESCRIPTION.
+        All parameters are declared in __init__
 
         Returns
         -------
-        TYPE
-            DESCRIPTION.
-        TYPE
-            DESCRIPTION.
+        xk: numpy array
+            root of the system.
+        k: int
+            number of iterations.
 
         """
-        r = self.residual(x0)
+        r = self.residual(self.x0)
         if np.einsum('i,i', r, r) < self.tol:
-            self.callback(x0)
-            return x0, 1
+            self.callback(self.x0)
+            return self.x0, 1
         else:
             pk = r
             k = 1
-            xk = x0
+            xk = self.x0
+            
             self.callback(xk)
             while k <= self.itermax:
                 alphak = np.einsum('i,i', r, r) / np.einsum('i,ik,k', pk, self.A, pk)
                 xk += alphak * pk
-                
                 self.callback(xk)
                 
                 rkp1 = r - alphak * np.einsum('ik, k', self.A, pk)
@@ -134,21 +174,55 @@ class cg():
         
     
     def minimizer_tool(self):
-        x0 = np.array([1., 1.])
-        if self.method == 'scipy':
-            self.history.append(np.transpose(np.r_[x0, self.fun(x0)]))
-            res = minimize(self.fun, x0, method='CG',callback=self.callback)
-        else:
-            res = DotDict()
-            res.x, res.nit= self.conjgrad(x0)
-        print('Minimum found in', res.x)
+        """
+        Calculate the roots of the solution Ax = b through the CG method.
+        
+        To allow comparison between own algorithm and that of scipy.
+
+        Returns
+        -------
+        res : Dictionary
+            res.x is the root of the system
+            res.nit is the number of iterations done.
+
+        """
+        print("\nMatrix A is \n", self.A)
+        print("\nVector b is \n", self.b.T)
+        print("\nThe built-in algorithm is initialized with tolerance "+ "{:.2E}".format(self.tol) + ' and max '+ str(self.itermax) + ' iterations.')
+        print("Finding the root of the system Ax = b with the conjugate gradient method...")
+        
+        
+
+        self.history.append(np.transpose(np.r_[self.x0, self.fun(self.x0)]))
+        res = minimize(self.fun, self.x0, method='CG',callback=self.callback)
+        self.history_s = self.history
+        self.res_s = res.nit
+        self.history = []
+        res = DotDict()
+        res.x, res.nit= self.conjgrad()
+        print('\nSolution found in', res.x)
         return res
             
     def plot(self,res):
+        """
+        Plot the conjugate gradient.
+
+        Parameters
+        ----------
+        res : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
         if self.ifplot == "yes":
             self.history = np.concatenate(self.history).reshape(res.nit+1, 3)
-            x = np.linspace(res.x[0]-1,res.x[0]+1,100)
-            y = np.linspace(res.x[1]-1,res.x[1]+1,100)
+            self.history_s = np.concatenate(self.history).reshape(self.res_s+1, 3)
+            radius = max(abs(res.x-self.x0toplot))+0.5
+            x = np.linspace(res.x[0]-radius,res.x[0]+radius,100)
+            y = np.linspace(res.x[1]-radius,res.x[1]+radius,100)
             z = np.empty((100,100))
             for indx, valx in np.ndenumerate(x):
                 for indy, valy in np.ndenumerate(y):
@@ -157,11 +231,13 @@ class cg():
             xx,yy = np.meshgrid(x,y)    
             fig = plt.figure()
             ax = fig.gca(projection='3d')
-            surf = ax.plot_surface(xx, yy, z, cmap=cm.coolwarm,
+            ax.plot_surface(xx, yy, z, cmap=cm.coolwarm,
                                        alpha = 0.5)
             ax.contour(xx,yy,z,cmap = cm.coolwarm)
             ax.view_init(elev = 60., azim = 120)
-            ax.plot3D(self.history[:,0],self.history[:,1],self.history[:,2], '.--r')
+            ax.plot3D(self.history[:,0],self.history[:,1],self.history[:,2], '.--r', label = "Own solver")
+            ax.plot3D(self.history_s[:,0],self.history_s[:,1],self.history_s[:,2], ':ob', markersize=.5, label = "Scipy solver")
+            ax.legend()
             ax.grid(False)
             ax.set_xlabel('x',fontsize = 8)
             ax.set_ylabel('y',fontsize = 8)
@@ -170,6 +246,8 @@ class cg():
 
 
 class DotDict(dict):
+    """Make dictionaries readable in dot format."""
+    
     pass
 
 
