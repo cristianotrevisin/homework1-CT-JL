@@ -246,6 +246,7 @@ class DotDict(dict):
     pass
 
 
+if
 cg = ConjugateGradient()
 res = cg.minimizer_tool()
 cg.plot(res)
