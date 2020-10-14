@@ -7,6 +7,7 @@ import scipy.optimize
 import matplotlib.pyplot as plt
 from matplotlib import cm, rc
 import argparse
+from mpl_toolkits.mplot3d import Axes3D
 
 class ConjugateGradient:
     """Class to allow resolution of the conjugate gradient."""
