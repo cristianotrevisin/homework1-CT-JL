@@ -8,13 +8,14 @@ import matplotlib.pyplot as plt
 from matplotlib import cm, rc
 import argparse
 
-
 class ConjugateGradient:
     """Class to allow resolution of the conjugate gradient."""
 
     def __init__(self):
         """
-        Initialize of the CG class. Reads the matrix from the input and calculates the minimum through the conjugate gradient method.
+        Initialize of the ConjugateGradient class.
+        Reads the matrix from the input files and compute the solution of the system
+        using the conjugate gradient method.
 
         Returns
         -------
@@ -144,7 +145,6 @@ class ConjugateGradient:
             root of the system.
         k: int
             number of iterations.
-
         """
         r = self.residual(self.x0)
         if np.einsum('i,i', r, r) < self.tol:
@@ -249,7 +249,6 @@ class ConjugateGradient:
 
 class DotDict(dict):
     """Make dictionaries readable in dot format."""
-
     pass
 
 
