@@ -1,4 +1,6 @@
-"""Resolution of Homework 1 part 1 by Cristiano Trevisin and Joseph Lemaitre."""
+"""
+    Resolution of Homework 1 part 1 by Cristiano Trevisin and Joseph Lemaitre.
+"""
 
 import numpy as np
 from scipy.optimize import minimize
