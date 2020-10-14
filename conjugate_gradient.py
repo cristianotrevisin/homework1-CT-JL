@@ -25,7 +25,7 @@ class ConjugateGradient:
         """
         parser = argparse.ArgumentParser(description="Optimizer of a quadratic function S(x)")
         parser.add_argument("--filename", "-f", nargs='?', help="path to file where system Ax=b is stored",
-                            default="input.csv", type=str)
+                            default="example/Ab.csv", type=str)
         parser.add_argument("--plot", "-p", nargs='?', help="if plot", default="yes", type=str)
         parser.add_argument("--initial_guess", "-g", nargs='?', help="path to file where initual guess x0 is stored",
                             default=None, type=str)
@@ -185,7 +185,7 @@ class ConjugateGradient:
         """
         print("\nMatrix A is \n", self.A)
         print("\nVector b is \n", self.b.T)
-        print(f"\nThe built-in algorithm is initialized with tolerance {self.tol} iterations.")
+        print(f"\nThe built-in algorithm is initialized with tolerance {self.tol}.")
         print("Finding the root of the system Ax = b with the conjugate gradient method...")
 
         self.history.append(np.transpose(np.r_[self.x0, self.fun(self.x0)]))
