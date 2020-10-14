@@ -30,8 +30,6 @@ class ConjugateGradient:
         parser.add_argument("--initial_guess", "-g", nargs='?', help="path to file where initual guess x0 is stored",
                             default=None, type=str)
         parser.add_argument("--tolerance", "-t", nargs='?', help="tolerance required", default=1e-9, type=float)
-        parser.add_argument("--maximum_iterations", "-i", nargs='?', help="maximum number of allowed iterations",
-                            default=1000, type=int)
         args = parser.parse_args()
         filename = args.filename
         self.ifplot = args.plot
@@ -50,7 +48,6 @@ class ConjugateGradient:
             self.x0toplot = np.zeros(self.b.shape)
 
         self.tol = args.tolerance  # norm tolerance
-        self.itermax = args.maximum_iterations  # max num of iterations
         self.history = []  # init history vector
         self.check_input()
 
@@ -153,11 +150,10 @@ class ConjugateGradient:
             return self.x0, 1
         else:
             pk = r
-            k = 1
             xk = self.x0
 
             self.callback(xk)
-            while k <= self.itermax:
+            for k in range(1, len(self.b)+1):
                 alphak = np.einsum('i,i', r, r) / np.einsum('i,ik,k', pk, self.A, pk)
                 xk += alphak * pk
                 self.callback(xk)
@@ -171,9 +167,7 @@ class ConjugateGradient:
 
                 pk = betak * pk + rkp1
                 r = rkp1
-                k += 1
 
-            print("Maximum iterations exceeded")
             return xk, k
 
     def minimizer_tool(self):
@@ -191,8 +185,7 @@ class ConjugateGradient:
         """
         print("\nMatrix A is \n", self.A)
         print("\nVector b is \n", self.b.T)
-        print("\nThe built-in algorithm is initialized with tolerance " + "{:.2E}".format(self.tol) + ' and max ' + str(
-            self.itermax) + ' iterations.')
+        print(f"\nThe built-in algorithm is initialized with tolerance {self.tol} iterations.")
         print("Finding the root of the system Ax = b with the conjugate gradient method...")
 
         self.history.append(np.transpose(np.r_[self.x0, self.fun(self.x0)]))
