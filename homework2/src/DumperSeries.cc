@@ -1,3 +1,6 @@
+#include "Series.hh"
+#include "DumperSeries.hh"
+
 class DumperSeries{
 
     public:

@@ -10,6 +10,7 @@ int main(int argc, char **charv){
     int N = atoi(charv[1]);
 
     std::string series_method = charv[2];
+    std::string dumper_method = charv[3];
 
     if (series_method.compare("arithmetic")==0){
         ComputeArithmetic result;
@@ -20,7 +21,24 @@ int main(int argc, char **charv){
     } else {
         std::cerr << "The chosen method " << series_method << " is not available!" << std::endl;
     }
+
+    if (dumper_method.compare("print")==0){
+        if (argc < 5) {
+            unsigned int precision = 5;
+        } else if (argc == 5) {
+            unsigned int precision = atoi(charv[4]);
+        }
+        
+
+    } else if (series_method.compare("write")==0){
+        if (argc < 5) {
+            std::string separator = "space";
+        } else if (argc == 5) {
+            std::string separator = charv[4];
+        }
+    } else {
+        std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
+    }
     
 
-    
 }
