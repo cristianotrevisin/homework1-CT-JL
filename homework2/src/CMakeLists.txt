@@ -10,6 +10,7 @@ target_link_libraries(main PUBLIC ComputePi)
 
 add_library(ComputeArithmetic ComputeArithmetic.cc)
 add_library(ComputePi ComputePi.cc)
+add_library(PrintSeries PrintSeries.cc)
 
 #add_library(Series Series.cc)
 

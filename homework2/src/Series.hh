@@ -4,6 +4,7 @@
 class Series{
     public: 
     double compute(int N);
+    double getAnalyticPrediction();
 };
 
 #endif 

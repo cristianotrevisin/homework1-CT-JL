@@ -11,11 +11,12 @@ class PrintSeries : public DumperSeries {
         
 
         for (unsigned int i = nsteps; i--> 1; ){
-            res = DumperSeries::series.compute(i);
+            //double res = DumperSeries::series.compute(i); // res = dumperserie.serie.compute()
+            double res = this->series.compute(i); // res = self.serie.compute(i)
             
             try {
-                trueres = DumperSeries::series.getAnalyticPrediction;
-                std::cout << "At iter " << i << " value series is " << res << " and convergence is " << abs(res-trueres) << " ." << std::endl;
+                double solution = this -> series.getAnalyticPrediction();
+                std::cout << "At iter " << i << " value series is " << res << " and convergence is " << abs(res-solution) << " ." << std::endl;
             } catch (const std::exception & exce) {
                 std::cout << "At iter " << i << " value series is " << res << " ." << std::endl;
             }
