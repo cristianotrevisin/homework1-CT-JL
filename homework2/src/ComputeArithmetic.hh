@@ -4,7 +4,7 @@
 class ComputeArithmetic{
 
     public:
-    double compute(int N);
+    double compute(unsigned int N);
 
 };
 
