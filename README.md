@@ -1,6 +1,6 @@
 # homework2-CT-JL
  
- in `homework2/src/``
+ in `homework2``
 
 ```
 mkdir build
@@ -8,5 +8,5 @@ cd build
 cmake ..
 cmake --build .
 # IF build successful, test:
- ./main 34
+ ./src/main 34
 ```

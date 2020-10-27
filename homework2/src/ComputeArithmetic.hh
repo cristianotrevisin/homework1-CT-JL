@@ -1,7 +1,7 @@
 #ifndef COMPUTEARITHMETIC_HH
 #define COMPUTEARITHMETIC_HH
 
-class ComputeArithmetic{
+class ComputeArithmetic : public Series {
 
     public:
     double compute(unsigned int N);
