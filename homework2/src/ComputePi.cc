@@ -13,6 +13,6 @@ double ComputePi::compute(unsigned int N){
     return std::sqrt(pi2);
 }
 
-double getAnalyticPrediction(){
+double ComputePi::getAnalyticPrediction(){
     return M_PI;
 }

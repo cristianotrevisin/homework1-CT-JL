@@ -13,6 +13,8 @@ int main(int argc, char **charv){
     std::string series_method = charv[2];
     std::string dumper_method = charv[3];
 
+    std::cout << dumper_method <<  std::endl;
+
     Series * result;
 
     if (series_method.compare("arithmetic")==0){
@@ -33,7 +35,9 @@ int main(int argc, char **charv){
         } else if (argc == 5) {
             unsigned int precision = atoi(charv[4]);
         }
-        PrintSeries printserie(*result, 4, 5);
+        PrintSeries printserie(*result, 6, 5);
+        printserie.dump();
+        std::cout << "dsds" << std::endl;
     } else if (series_method.compare("write")==0){
         if (argc < 5) {
             std::string separator = "space";
