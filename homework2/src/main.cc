@@ -35,7 +35,7 @@ int main(int argc, char **charv){
         } else if (argc == 5) {
             unsigned int precision = atoi(charv[4]);
         }
-        PrintSeries printserie(*result, 6, 5);
+        PrintSeries printserie(*result, 1000, 5);
         printserie.dump();
         std::cout << "dsds" << std::endl;
     } else if (series_method.compare("write")==0){
