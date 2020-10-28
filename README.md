@@ -11,27 +11,27 @@ cmake --build .
 ```
 The ```main``` script can then be executed through the following command
 ```
-./src/main arg1 arg2 arg3 arg4 
+./src/main max_iter serie_method dumper_method dump_freq (filename)
 ```
 It takes five arguments:
 
-* ```arg1 (int)``` represents the length of the series;
-* ```arg2 (char)```controls the desired series method (```'ari'``` for an arithmetic evaluation of the series or ```'pi'``` for the estimation of Pi);
-* ```arg3 (char)```controls the desired dumping method (```'print'``` if the results should be printed to screen ```'write'``` if the results are to be saved in a text file);
-* ```arg4 (int)```controls the dumping frequency at which the results should be reported;
-* ```arg5 (char)```gives the name of the output files for the ```'write'``` dumping method. It selects automatically the most suitable separator, a space or tab for a ```.txt``` file, a comma for a ```.csv```file, and a pipe for a ```.psv```file.
+* ```max_iter (int)``` represents the length of the series;
+* ```serie_method (str)```controls the desired series method (```ari``` for an arithmetic evaluation of the series or ```'pi'``` for the estimation of Pi);
+* ```dumper_method (str)```controls the desired dumping method (```print``` if the results should be printed to screen ```'write'``` if the results are to be saved in a text file);
+* ```dump_freq (int)```controls the dumping frequency at which the results should be reported;
+* ```filename (str)```gives the name of the output files for the ```write``` dumping method. It selects automatically the most suitable separator, a space or tab for a ```.txt``` file, a comma for a ```.csv```file, and a pipe for a ```.psv```file.
 
 ### Python Plotter
 This file needs Python 3.6+ and recent versions of ```numpy```, ```matplotlib```, and ```pandas```.
 
-File ```plot.py``` allows plotting of the series output generated through the ```write``` command of the routine above. It takes three arguments:
+File ```plot.py``` allows plotting of the series output generated through the ```write``` command of the routine above. It takes two arguments:
 
 * ```file_name```, where the file with the output is stored (file extension should be included). Separator is automatically detected through the Python sniffer engine. Default is ```example.txt```;
 * ```output_file```, where the plot should be saved. If none is provided, then the script will show to screen the plot. Default is ```' '```, which only shows the output to screen.
 
 ## Answer to the questions
 ### Question 2.1 
-The strategy that we chose to divide the work amongst ourselved stemmed from the simple schedule availabilities. Overall, we collaborated equally depending on the time availabilities and were able to coordinate our work. We sought frequent communication in order to update each other on the advancement of the progress and  and select the best way to address a question. GIT helped, as allows collaborative work and keeping track of the progress.
+The strategy that we chose to divide the work amongst ourselved stemmed from the simple schedule availabilities. Overall, we collaborated equally depending on the time availabilities and were able to coordinate our work. We sought frequent communication in order to update each other on the advancement of the progress and  and select the best way to address a question. GIT helped, as allows collaborative work and keeping track of the progress. We switched between pair-programming (useful because of our different levels: we can learn and teach faster) and simple task division.
 
 ### Question 5.4
 The code has been factorized in order to reduce the number of operations that should be executed at any time. Specifically, the class ```Series``` includes general definition such as the counter of the value (it updates everytime that is called) and the current value of the series. This way, calling the dumper does not need the recomputation of the series at every iteration. The number of computations depend on the maxiter (N) term. In the following computations, we only consier the number of mathematical computations that should be executed. Evaluation of the if/else statement, reads and writes is not included. 
