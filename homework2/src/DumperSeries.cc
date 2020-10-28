@@ -3,6 +3,7 @@
 #include <iostream>
 
 DumperSeries::DumperSeries(Series & series) : series(series) {
+    precision = 10;
 }
 /*
 DumperSeries::~DumperSeries() {

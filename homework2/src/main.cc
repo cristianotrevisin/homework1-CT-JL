@@ -53,7 +53,7 @@ int main(int argc, char **charv){
         }
         std::cout << "dewewew" << std::endl;
         WriteSeries writeserie(*result, 1000, 5);
-        writeserie.dump();
+        //writeserie.dump();
         std::cout << "dsds" << std::endl;
     
     } else {
