@@ -26,7 +26,7 @@ This file needs Python 3.6+ and recent versions of ```numpy```, ```matplotlib```
 
 File ```plot.py``` allows plotting of the series output generated through the ```write``` command of the routine above. It takes three arguments:
 
-* ```file_name```, where the file with the output is stored (file extension should be included). Default is ```example.txt```;
+* ```file_name```, where the file with the output is stored (file extension should be included). Separator is automatically detected through the Python sniffer engine. Default is ```example.txt```;
 * ```output_file```, where the plot should be saved. If none is provided, then the script will show to screen the plot. Default is ```' '```, which only shows the output to screen.
 
 ## Answer to the questions
