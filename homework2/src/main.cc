@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 int main(int argc, char **charv){
 
@@ -36,8 +37,14 @@ int main(int argc, char **charv){
     }
     if (dumper_method.compare("print")==0){
         my_dumper = new PrintSeries(*my_serie, max_iter, dump_freq);
+        my_dumper->dump(std::cout);
     } else if (dumper_method.compare("write")==0){
         my_dumper = new WriteSeries(*my_serie, max_iter, dump_freq);
+        std::ofstream my_file;
+        my_file.open(filename, std::ios::out);
+        my_dumper->dump(my_file);
+        my_file.close();
+        
     
     } else {
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
@@ -45,8 +52,12 @@ int main(int argc, char **charv){
     }
 
     my_dumper->setPrecision(8);
+
+
+
+
     
-    my_dumper->dump(std::cout);
+    
 
     delete my_dumper;
     delete my_serie;

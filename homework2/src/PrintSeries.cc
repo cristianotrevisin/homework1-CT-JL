@@ -15,13 +15,10 @@ void PrintSeries::dump(std::ostream &os) {
 
     for (int i = 1; i <= this->maxiter; i += this->freq) {
         double res = this->series.compute(i); 
-        if (std::isnan(sol_ana))
-            std::cout << "At iter " << i << " value series is " << std::setprecision(this->precision) << 
-            res << "." << std::endl;
-        else
-            std::cout << "At iter " << i << " value series is " << std::setprecision(this->precision) << 
-            res << " and convergence is " << abs(res-sol_ana) << "." << std::endl;
-        
+        os << "At iter " << i << ", value is " << std::setprecision(this->precision) << res; 
+        if (not std::isnan(sol_ana))
+            os << ", convergence is " << abs(res-sol_ana);
+        os << "." << std::endl;
     }
 
 }

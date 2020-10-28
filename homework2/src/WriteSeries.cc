@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 WriteSeries::WriteSeries(Series & series, int maxiter, int freq) : DumperSeries(series) {
     this->maxiter = maxiter;
@@ -12,18 +13,13 @@ WriteSeries::WriteSeries(Series & series, int maxiter, int freq) : DumperSeries(
 }
 
 void WriteSeries::dump(std::ostream &os) {
-    int nsteps = this->maxiter/this->freq;
-    std::cout << nsteps << std::endl;
 
-    std::ofstream myfile;
-    myfile.open("example.txt", std::ios::out);
-    myfile << "iter" << separator << "result" << separator << "error" << std::endl;
-  
-    for (int i = nsteps; i--> 1;){
+    double sol_ana = this->series.getAnalyticPrediction();
+
+
+    for (int i = 1; i <= this->maxiter; i += this->freq) {
         double res = this->series.compute(i); 
-
-        double solution = this -> series.getAnalyticPrediction();
-        myfile << i << separator << res << separator << abs(res-solution) << std::endl;   
+        os << i << separator << std::setprecision(this->precision) << res << separator << abs(res-sol_ana) << std::endl;   
     }
-    myfile.close();
+
 }
