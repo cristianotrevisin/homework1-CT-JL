@@ -25,7 +25,7 @@ int main(int argc, char **charv){
     ss >> max_iter >> series_method >> dumper_method >> dump_freq >> filename;
     
     Series * my_serie;
-    DumperSeries * my_dumper;
+    //DumperSeries * my_dumper;
 
     if (series_method.compare("ari")==0){
         my_serie = new ComputeArithmetic;
@@ -36,13 +36,19 @@ int main(int argc, char **charv){
         exit(1);
     }
     if (dumper_method.compare("print")==0){
-        my_dumper = new PrintSeries(*my_serie, max_iter, dump_freq);
-        my_dumper->dump(std::cout);
+        PrintSeries my_dumper(*my_serie, max_iter, dump_freq);
+        my_dumper.dump(std::cout);
     } else if (dumper_method.compare("write")==0){
-        my_dumper = new WriteSeries(*my_serie, max_iter, dump_freq);
+        WriteSeries my_dumper(*my_serie, max_iter, dump_freq);
+
+        if(filename.substr(filename.find_last_of(".")) == ".csv")
+            my_dumper.setSeparator(",");
+        else if (filename.substr(filename.find_last_of(".")) == ".psv")
+            my_dumper.setSeparator("|");
+
         std::ofstream my_file;
         my_file.open(filename, std::ios::out);
-        my_dumper->dump(my_file);
+        my_dumper.dump(my_file);
         my_file.close();
         
     
@@ -51,7 +57,7 @@ int main(int argc, char **charv){
         exit(1);
     }
 
-    my_dumper->setPrecision(8);
+    //my_dumper.setPrecision(8);
 
 
 
@@ -59,7 +65,7 @@ int main(int argc, char **charv){
     
     
 
-    delete my_dumper;
+    //delete my_dumper;
     delete my_serie;
 
 }
