@@ -11,7 +11,7 @@ WriteSeries::WriteSeries(Series & series, int maxiter, int freq) : DumperSeries(
     this->setSeparator(" ");
 }
 
-void WriteSeries::dump() {
+void WriteSeries::dump(std::ostream &os) {
     int nsteps = this->maxiter/this->freq;
     std::cout << nsteps << std::endl;
 

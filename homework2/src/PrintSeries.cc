@@ -9,7 +9,7 @@ PrintSeries::PrintSeries(Series & series, int maxiter, int freq) : DumperSeries(
     this->freq = freq;
 }
 
-void PrintSeries::dump() {
+void PrintSeries::dump(std::ostream &os) {
     int nsteps = this->maxiter/this->freq;
     std::cout << nsteps << std::endl;
     for (int i = nsteps; i--> 1;){
