@@ -3,7 +3,7 @@
 
 class Series{
     public: 
-    double compute(int N);
+   virtual double compute(unsigned int N) = 0;
     double getAnalyticPrediction();
 };
 

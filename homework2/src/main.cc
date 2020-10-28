@@ -12,12 +12,16 @@ int main(int argc, char **charv){
     std::string series_method = charv[2];
     std::string dumper_method = charv[3];
 
+    Series * result;
+
     if (series_method.compare("arithmetic")==0){
-        ComputeArithmetic result;
-        std::cout << "The calculated value of the series is " << result.compute(N) << std::endl;
+        result = new ComputeArithmetic;
+        //ComputeArithmetic result;
+        std::cout << "The calculated value of the series is " << result->compute(N) << std::endl;
     } else if (series_method.compare("pi")==0){
-        ComputePi result;
-        std::cout << "The estimated value of pi is " << result.compute(N) << std::endl;
+        //ComputePi result;
+        result = new ComputePi;
+        std::cout << "The estimated value of pi is " << result->compute(N) << std::endl;
     } else {
         std::cerr << "The chosen method " << series_method << " is not available!" << std::endl;
     }
@@ -39,6 +43,6 @@ int main(int argc, char **charv){
     } else {
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
     }
-    
+    delete result;
 
 }
