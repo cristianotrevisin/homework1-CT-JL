@@ -32,27 +32,16 @@ def main():
     parser.add_argument('-f', '--file_name', type=str,
                         help=('file_name where convergence results are stored'), 
                         default = 'example.txt')
-    parser.add_argument('-s', '--separator', type=str,
-                        help=('separator provided in the file where convergence results are stored'),
-                        default = 'space')
     parser.add_argument('-o', '--output_file', type=str,
                         help=('file where the plot is saved'),
                         default = ' ')
     
     args = parser.parse_args()
     file_name = args.file_name
-    separator = args.separator
     output_file = args.output_file
     
     # Loads the dataframe
-    if separator == 'space':
-        data_plot = pd.read_csv(file_name, sep= ' ')
-    elif separator == 'tab':
-        data_plot = pd.read_csv(file_name, header=True, sep= '\t')
-    elif separator == 'comma':
-        data_plot = pd.read_csv(file_name, header=True, sep= ',')
-    elif separator == 'pipe':
-        data_plot = pd.read_csv(file_name, header=True, sep= '|')
+    data_plot = pd.read_csv(file_name)
     
     # Plots the dataframe
     if data_plot['error'].isnull().values.any():
