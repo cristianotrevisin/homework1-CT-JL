@@ -15,6 +15,7 @@ int main(int argc, char **charv){
     std::string dumper_method;
     std::string filename;
     int max_iter, dump_freq;
+    int precision = 5;
 
     /* Concatenate arguments */
     std::stringstream ss;
@@ -35,35 +36,31 @@ int main(int argc, char **charv){
         std::cerr << "The chosen method " << series_method << " is not available!" << std::endl;
         exit(1);
     }
+
     if (dumper_method.compare("print")==0){
         PrintSeries my_dumper(*my_serie, max_iter, dump_freq);
+        my_dumper.setPrecision(precision);
         my_dumper.dump(std::cout);
     } else if (dumper_method.compare("write")==0){
         WriteSeries my_dumper(*my_serie, max_iter, dump_freq);
 
+        /* infer separator from extension. */
         if(filename.substr(filename.find_last_of(".")) == ".csv")
             my_dumper.setSeparator(",");
         else if (filename.substr(filename.find_last_of(".")) == ".psv")
             my_dumper.setSeparator("|");
+        my_dumper.setPrecision(precision);
 
         std::ofstream my_file;
         my_file.open(filename, std::ios::out);
         my_dumper.dump(my_file);
         my_file.close();
         
-    
     } else {
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
         exit(1);
     }
 
-    //my_dumper.setPrecision(8);
-
-
-
-
-    
-    
 
     //delete my_dumper;
     delete my_serie;
