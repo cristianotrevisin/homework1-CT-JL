@@ -2,6 +2,7 @@
 #include "ComputeArithmetic.hh"
 #include "ComputePi.hh"
 #include "PrintSeries.hh"
+#include "WriteSeries.hh"
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -38,12 +39,16 @@ int main(int argc, char **charv){
         PrintSeries printserie(*result, 1000, 5);
         printserie.dump();
         std::cout << "dsds" << std::endl;
-    } else if (series_method.compare("write")==0){
+    } else if (dumper_method.compare("write")==0){
         if (argc < 5) {
             std::string separator = "space";
         } else if (argc == 5) {
             std::string separator = charv[4];
         }
+        std::cout << "dewewew" << std::endl;
+        WriteSeries writeserie(*result, 1000, 5);
+        writeserie.dump();
+        std::cout << "dsds" << std::endl;
     
     } else {
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;

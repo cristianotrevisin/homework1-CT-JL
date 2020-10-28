@@ -8,9 +8,11 @@ target_link_libraries(main PUBLIC ComputeArithmetic)
 target_link_libraries(main PUBLIC ComputePi)
 target_link_libraries(main PUBLIC PrintSeries)
 target_link_libraries(main PUBLIC DumperSeries)
+target_link_libraries(main PUBLIC WriteSeries)
 
 add_library(ComputeArithmetic ComputeArithmetic.cc)
 add_library(ComputePi ComputePi.cc)
 add_library(PrintSeries PrintSeries.cc)
+add_library(WriteSeries WriteSeries.cc)
 add_library(DumperSeries DumperSeries.cc)
 
