@@ -38,13 +38,13 @@ First of all, let's calculate the number of operation for a simple plain evaluat
 * for the ```'ari'``` (arithmetic) method, the evaluation of the series takes 1+4N computations: 1 to assign the initial index as zero, and N-times the update of the index in the loop, the addition of the unity to the index at each step, the evaluation of the term to be added in the summatory (requires only one computation) and the addition of this term to the actual summatory;
 * for the ```'pi'``` method, the evaluation of the series takes 3 + 6N computations: 1 to assign the initial index as zero, and N-times the update of the index in the loop, the addition of the unity to the index at each step, the evaluation of the term to be added to the summatory (which requires three computations here) and the addition of this term to the actual summatory, plus the multiplication by 6 and the extraction of the squared root.
 
-The unfactorized script will do the plain calculation at each iteration, meaning that at step 1 the number of calculations will be (in the arithmetic case) 1+4x1; for the step 2 it will be 1+4x2, and so on. This can be mathematically represented as (f is the frequency):
+The unfactorized script will do the plain calculation at each iteration, meaning that at step 1 the number of calculations will be (in the arithmetic case) 1+4x1+1 (the last term for the loop to print/write); for the step 2 it will be 1+4x2+1, and so on. This can be mathematically represented as (f is the frequency):
 
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;P(N)=\sum_{i=1}^{N/f}(1+4fi)=\frac{N}{f}+2N\left(\frac{N}{f}+1\right)" title="\Large P(N)=\sum_{i=1}^{N/f}(1+4fi)=\frac{N}{f}+2N\left(\frac{N}{f}+1\right)" />
+<img src="https://latex.codecogs.com/svg.latex?\Large&space;P(N)=\sum_{i=1}^{N/f}(2+4fi)=2N\left(\frac{1}{f}+\frac{N}{f}+1\right)" title="\Large P(N)=\sum_{i=1}^{N/f}(2+4fi)=2N\left(\frac{1}{f}+\frac{N}{f}+1\right)" />
 
 For the `pi` case, the equation can be easily yielded:
 
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;P(N)=\sum_{i=1}^{N/f}(3+6fi)=\frac{3N}{f}+3N\left(\frac{N}{f}+1\right)" title="\Large P(N)=\sum_{i=1}^{N/f}(3+6fi)=\frac{3N}{f}+3N\left(\frac{N}{f}+1\right)" />
+<img src="https://latex.codecogs.com/svg.latex?\Large&space;P(N)=\sum_{i=1}^{N/f}(4+6fi)=N\left(\frac{3N}{f}+\frac{4}{f}+3\right)" title="\Large P(N)=\sum_{i=1}^{N/f}(4+6fi)=N\left(\frac{3N}{f}+\frac{4}{f}+3\right)" />
 
 ### Question 5.4
 The code has been factorized in order to reduce the number of operations that should be executed at any time. Specifically, the class ```Series``` includes general definition such as the counter of the value (it updates everytime that is called) and the current value of the series. This way, calling the dumper does not need the recomputation of the series at every iteration. The number of computations depend on the maxiter (N) term. In the following computations, we only consier the number of mathematical computations that should be executed. Evaluation of the if/else statement, reads and writes is not included. 
