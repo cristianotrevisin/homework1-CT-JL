@@ -6,16 +6,22 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 int main(int argc, char **charv){
 
-    int N = atoi(charv[1]);
+    std::string series_method;
+    std::string dumper_method;
+    int N;
 
-    std::string series_method = charv[2];
-    std::string dumper_method = charv[3];
-
-    std::cout << dumper_method <<  std::endl;
-
+    /* Concatenate arguments */
+    std::stringstream ss;
+    for (int i=1; i < argc; i++) {
+        ss << charv[i] << " ";
+    }
+    /* Parse arguments */
+    ss >> N >> series_method >> dumper_method;
+    
     Series * result;
 
     if (series_method.compare("arithmetic")==0){
