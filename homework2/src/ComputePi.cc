@@ -5,9 +5,8 @@
 
 double ComputePi::compute(unsigned int N){
     double pi2 = 0;
-    for (unsigned int i = 0; i < N; ++i) {
-        unsigned int k = N-i;
-        pi2 += 1./(1.*k*k);
+    for (unsigned int i = N; i > 0; --i) {
+        pi2 += 1./(1.*i*i);
     }
     pi2 *= 6;
     return std::sqrt(pi2);
