@@ -4,6 +4,7 @@
 #include <iostream>
 
 class DumperSeries{
+    /* Parent between the different dumper: handle printing precision and the << operator */
 
     public:
     DumperSeries(Series & series);

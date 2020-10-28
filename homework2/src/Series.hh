@@ -3,6 +3,8 @@
 #include <cmath>
 
 class Series{
+    /* Parent of the different serie: template to compute the term iteratively while conserving 
+    memory of the current iteration value to save computer time */
     public: 
     virtual double compute(unsigned int N);
     virtual double getAnalyticPrediction() {return nan("");}

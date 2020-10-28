@@ -2,6 +2,7 @@
 #define COMPUTEPI_HH
 
 class ComputePi : public Series {
+    /* Series that converge towards Pi */
 
     public:
     double compute(unsigned int N);
