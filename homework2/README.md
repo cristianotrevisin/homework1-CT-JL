@@ -1,17 +1,27 @@
 # Homework 2 by Joseph Lemaitre and Cristiano Trevisin
  
 ## Documentation
-### C++ routines
-First of all, the executable files should be generated. To do so, we recommend the following commands:
+### Compilation and example
+First of all, the executable files should be generated. To do so, we recommend the following commands in the directory:
 ```bash
 mkdir build
 cd build
 cmake ..
 cmake --build .
 ```
+You can run a simple example as (still in the `homework2/build/` folder:
+```
+./src/main 100 pi write 3 test.csv
+python3 ../plot.py  -f test.csv
+```
+It should show an interesting graph !
+
+
+
+### Documentation of the C++ part
 The ```main``` script can then be executed through the following command
 ```
-./src/main max_iter serie_method dumper_method dump_freq (filename)
+./main max_iter serie_method dumper_method dump_freq (filename)
 ```
 It takes five arguments:
 
