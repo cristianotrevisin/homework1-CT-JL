@@ -5,7 +5,10 @@
 class DumperSeries{
 
     public:
+    DumperSeries(Series & series);
     virtual void dump() = 0;
+
+    //virtual ~DumperSeries();
 
     protected:
     

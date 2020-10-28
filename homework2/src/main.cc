@@ -1,6 +1,7 @@
 #include "Series.hh"
 #include "ComputeArithmetic.hh"
 #include "ComputePi.hh"
+#include "PrintSeries.hh"
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -32,17 +33,20 @@ int main(int argc, char **charv){
         } else if (argc == 5) {
             unsigned int precision = atoi(charv[4]);
         }
-        
-
+        PrintSeries printserie(*result, 4, 5);
     } else if (series_method.compare("write")==0){
         if (argc < 5) {
             std::string separator = "space";
         } else if (argc == 5) {
             std::string separator = charv[4];
         }
+    
     } else {
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
     }
+
+
+
     delete result;
 
 }

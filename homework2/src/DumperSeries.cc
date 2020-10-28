@@ -1,12 +1,10 @@
 #include "Series.hh"
 #include "DumperSeries.hh"
+#include <iostream>
 
-class DumperSeries{
-
-    public:
-    virtual void dump() = 0;
-
-    protected:
-
-    Series & series;
-};
+DumperSeries::DumperSeries(Series & series) : series(series) {
+}
+/*
+DumperSeries::~DumperSeries() {
+    //delete &this->series;
+}*/
