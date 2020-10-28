@@ -5,7 +5,6 @@ class ComputeArithmetic : public Series {
 
     public:
     double computeTerm(unsigned int k);
-
 };
 
 #endif 

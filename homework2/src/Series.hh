@@ -7,6 +7,7 @@ class Series{
     virtual double compute(unsigned int N);
     virtual double getAnalyticPrediction() {return nan("");}
     virtual double computeTerm(unsigned int k) = 0;
+    virtual ~Series() {};
     unsigned int current_index;
     double current_value;
 };

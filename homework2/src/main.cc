@@ -12,7 +12,8 @@ int main(int argc, char **charv){
 
     std::string series_method;
     std::string dumper_method;
-    int N;
+    std::string filename;
+    int max_iter, dump_freq;
 
     /* Concatenate arguments */
     std::stringstream ss;
@@ -20,46 +21,34 @@ int main(int argc, char **charv){
         ss << charv[i] << " ";
     }
     /* Parse arguments */
-    ss >> N >> series_method >> dumper_method;
+    ss >> max_iter >> series_method >> dumper_method >> dump_freq >> filename;
     
-    Series * result;
+    Series * my_serie;
+    DumperSeries * my_dumper;
 
-    if (series_method.compare("arithmetic")==0){
-        result = new ComputeArithmetic;
-        //ComputeArithmetic result;
-        std::cout << "The calculated value of the series is " << result->compute(N) << std::endl;
+    if (series_method.compare("ari")==0){
+        my_serie = new ComputeArithmetic;
     } else if (series_method.compare("pi")==0){
-        //ComputePi result;
-        result = new ComputePi;
-        std::cout << "The estimated value of pi is " << result->compute(N) << std::endl;
+        my_serie = new ComputePi;
     } else {
         std::cerr << "The chosen method " << series_method << " is not available!" << std::endl;
+        exit(1);
     }
-
     if (dumper_method.compare("print")==0){
-        if (argc < 5) {
-            unsigned int precision = 5;
-        } else if (argc == 5) {
-            unsigned int precision = atoi(charv[4]);
-        }
-        PrintSeries printserie(*result, 1000, 5);
-        printserie.dump();
-        std::cout << "dsds" << std::endl;
+        my_dumper = new PrintSeries(*my_serie, max_iter, dump_freq);
     } else if (dumper_method.compare("write")==0){
-        if (argc < 5) {
-            std::string separator = "space";
-        } else if (argc == 5) {
-            std::string separator = charv[4];
-        }
-        std::cout << "dewewew" << std::endl;
-        WriteSeries writeserie(*result, 1000, 5);
-        //writeserie.dump();
-        std::cout << "dsds" << std::endl;
+        my_dumper = new WriteSeries(*my_serie, max_iter, dump_freq);
     
     } else {
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
+        exit(1);
     }
 
-    delete result;
+    my_dumper->setPrecision(8);
+    
+    my_dumper->dump(std::cout);
+
+    delete my_dumper;
+    delete my_serie;
 
 }

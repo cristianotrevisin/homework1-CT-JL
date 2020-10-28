@@ -11,15 +11,17 @@ PrintSeries::PrintSeries(Series & series, int maxiter, int freq) : DumperSeries(
 }
 
 void PrintSeries::dump(std::ostream &os) {
-    int nsteps = this->maxiter/this->freq;
-    std::cout << nsteps << std::endl;
-    for (int i = nsteps; i--> 1;){
+    double sol_ana = this->series.getAnalyticPrediction();
+
+    for (int i = 1; i <= this->maxiter; i += this->freq) {
         double res = this->series.compute(i); 
-        try {
-            double solution = this -> series.getAnalyticPrediction();
-            std::cout << "At iter " << i << " value series is " << std::setprecision(this->precision) << res << " and convergence is " << abs(res-solution) << " ." << std::endl;
-        } catch (const std::exception & exce) {
-            std::cout << "At iter " << i << " value series is " << std::setprecision(this->precision) << res << " ." << std::endl;
-        }
+        if (std::isnan(sol_ana))
+            std::cout << "At iter " << i << " value series is " << std::setprecision(this->precision) << 
+            res << "." << std::endl;
+        else
+            std::cout << "At iter " << i << " value series is " << std::setprecision(this->precision) << 
+            res << " and convergence is " << abs(res-sol_ana) << "." << std::endl;
+        
     }
+
 }

@@ -5,7 +5,3 @@
 DumperSeries::DumperSeries(Series & series) : series(series) {
     precision = 10;
 }
-/*
-DumperSeries::~DumperSeries() {
-    //delete &this->series;
-}*/
