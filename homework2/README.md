@@ -68,4 +68,8 @@ The code has been factorized in order to reduce the number of operations that sh
 <img src="https://latex.codecogs.com/svg.latex?\Large&space;P(N)=10N" title="\Large P(N)=P(N)=10N" />
 
 The convenience of the factorization can be easily be recognized: while in the first case, the number of computations grows quadratically with the last term of the series, with the refactorization the growth is now linear, providing substantial advantage in terms of computational effort when handling big numbers.
- 
+
+### Question 5.5
+Optimizing the loop for the `pi` method to work around the rounding errors over floating point is possible as the series would, in this case, need to be calculated backwards. This effectively adds one more computation each time a series is evaluated, yielding:
+
+<img src="https://latex.codecogs.com/svg.latex?\Large&space;P(N)=11N" title="\Large P(N)=P(N)=11N" />
