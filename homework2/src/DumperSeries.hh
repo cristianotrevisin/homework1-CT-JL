@@ -19,4 +19,9 @@ class DumperSeries{
     unsigned int precision;
 
 };
+
+inline std::ostream & operator <<(std::ostream & stream, DumperSeries & _this) {
+  _this.dump(stream);
+  return stream;
+}
 #endif

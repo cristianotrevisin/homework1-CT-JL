@@ -60,8 +60,6 @@ int main(int argc, char **charv){
         std::cerr << "The chosen dumper method " << dumper_method << " is not available!" << std::endl;
     }
 
-
-
     delete result;
 
 }
