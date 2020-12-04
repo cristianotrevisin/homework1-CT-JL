@@ -4,8 +4,14 @@ project (Particles)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(FFTW)
-include_directories(/usr/local/include)
+
+option (USE_FFTW "Use FFTW library?" ON)
+
+if (USE_FFTW)
+  find_package(FFTW)
+  include_directories(/usr/local/include)
+endif (USE_FFTW)
+
 
 ################################################################
 # libpart
