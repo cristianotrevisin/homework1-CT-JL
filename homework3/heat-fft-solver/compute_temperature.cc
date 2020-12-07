@@ -11,6 +11,7 @@ void ComputeTemperature::compute(System& system) {
     double kappa = 1.0;
     double L = 1.0; //TODO
     double deltat = .1;
+
     int N = sqrt(system.getNbParticles());
 
     
@@ -23,9 +24,7 @@ void ComputeTemperature::compute(System& system) {
 
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
 
-        std::cout << matpt.getTemperature() << " "
-          << matpt.getHeatRate()<< " -> " << matpt.getPosition() << "-" << matpt.getVelocity() <<
-          matpt.getForce() << matpt.getMass() <<  std::endl;
+        std::cout << matpt.getTemperature() << " ";
 
         theta_n(i,j) = matpt.getTemperature();
         hv(i,j)    = matpt.getHeatRate();
@@ -33,6 +32,7 @@ void ComputeTemperature::compute(System& system) {
         if (i >= N){
             i = 0;
             j++;
+            std::cout << std::endl;
         }
     }
 
@@ -47,8 +47,8 @@ void ComputeTemperature::compute(System& system) {
         auto& val = std::get<2>(entry);
         // TODO Not L
         std::complex<double> qfreq_ij = (real(q_freq(i,j)), imag(q_freq(i,j)));
-        val = (hvh(i,j) - kappa * thetah(i,j) * (2*M_PI/L)*(2*M_PI/L) * qfreq_ij) / (rho * C);
-        std::cout << val << std::endl;
+        val = (hvh(i,j) - kappa * thetah(i,j)  * qfreq_ij / (L*L)) / (rho * C);
+        std::cout << qfreq_ij << std::endl;
     }
 
     Matrix<complex> dtheta_over_dt = FFT::itransform(dthetah_over_dt);
@@ -57,9 +57,9 @@ void ComputeTemperature::compute(System& system) {
     for (auto& par : system) {
 
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
-        std::cout << theta_n(i,j) << "inc" << deltat*dtheta_over_dt(i,j) << std::endl;
+        //std::cout << theta_n(i,j) << "inc" << deltat*dtheta_over_dt(i,j) << std::endl;
 
-        matpt.getTemperature() = std::real(theta_n(i,j) + deltat*dtheta_over_dt(i,j));
+        matpt.getTemperature() = std::real(theta_n(i,j) - deltat*dtheta_over_dt(i,j));
         i++;
         if (i >= N){
             i = 0;
