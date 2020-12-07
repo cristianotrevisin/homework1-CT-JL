@@ -16,7 +16,21 @@ struct FFT {
 
 /* ------------------------------------------------------ */
 
-inline Matrix<complex> FFT::transform(Matrix<complex>& m_in) {}
+inline Matrix<complex> FFT::transform(Matrix<complex>& m_in) {
+
+  //fftw_plan transform_plan fftw_plan_dft_2d(int n0, int n1, fftw_complex *in, fftw_complex *out, int sign, unsigned flags);
+  Matrix<complex> m_out(m_in.size());
+
+  fftw_plan transform_plan = fftw_plan_dft_2d(m_in.rows(), m_in.cols(), 
+  reinterpret_cast<fftw_complex*>(m_in.data()), 
+  reinterpret_cast<fftw_complex*>(m_out.data()), FFTW_FORWARD, FFTW_ESTIMATE);
+
+
+  fftw_execute(transform_plan);
+
+  return m_out;
+
+}
 
 /* ------------------------------------------------------ */
 

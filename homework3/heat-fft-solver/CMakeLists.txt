@@ -13,7 +13,6 @@ if (USE_FFTW)
   include_directories(/usr/local/include)
 endif (USE_FFTW)
 
->>>>>>> aed1f3e1f07537a3994cc24c49e0f2db308f731d
 
 ################################################################
 # libpart
