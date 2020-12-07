@@ -39,11 +39,11 @@ add_library(part
   ping_pong_balls_factory.cc 
   compute_interaction.cc
   compute_temperature.cc
-  material_points_factory.cc 
+  material_points_factory.cc
   )
 
 add_executable(particles main.cc)
-target_link_libraries(particles gtest_main gtest pthread part)
+target_link_libraries(particles gtest_main gtest pthread part ${FFTW_LIBRARIES})
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt")
   add_subdirectory(googletest)
