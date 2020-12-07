@@ -38,6 +38,7 @@ void ComputeTemperature::compute(System& system) {
 
     Matrix<complex> thetah = FFT::transform(theta_n);
     Matrix<std::complex<int>> q_freq = FFT::computeFrequencies(N);
+    Matrix<complex> hvh = FFT::transform(hv);
 
     Matrix<complex> dthetah_over_dt(N);
     for (auto&& entry : index(dthetah_over_dt)) {
@@ -46,7 +47,7 @@ void ComputeTemperature::compute(System& system) {
         auto& val = std::get<2>(entry);
         // TODO Not L
         std::complex<double> qfreq_ij = (real(q_freq(i,j)), imag(q_freq(i,j)));
-        val = (hv(i,j) - kappa * thetah(i,j) * (2*M_PI/L)*(2*M_PI/L) * qfreq_ij) / (rho * C);
+        val = (hvh(i,j) - kappa * thetah(i,j) * (2*M_PI/L)*(2*M_PI/L) * qfreq_ij) / (rho * C);
         std::cout << val << std::endl;
     }
 
