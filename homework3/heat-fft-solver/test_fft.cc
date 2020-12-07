@@ -36,3 +36,41 @@ TEST(FFT, transform) {
 
 TEST(FFT, inverse_transform) {}
 /*****************************************************************/
+
+TEST(FFT, computeFrequencies) {
+  // even N
+  UInt N = 4; //we test it for not many frequencies
+  
+  // we create the vector with the wavenumbers (results are from np.fft.fftfreqs, multiplied by N)
+  std::vector<int> vf = { 0, 1, -2, -1 };
+
+  Matrix<std::complex<int>> res = FFT::computeFrequencies(N);
+
+  for (auto&& entry : index(res)) {
+    int i = std::get<0>(entry);
+    int j = std::get<1>(entry);
+    auto& val = std::get<2>(entry);
+    
+    ASSERT_NEAR(val.real(), vf[i], 1e-10);
+    ASSERT_NEAR(val.imag(), vf[j], 1e-10);
+  }
+
+  // odd N
+
+  UInt No = 5; //we test it for not many frequencies
+  
+  // we create the vector with the wavenumbers (results are from np.fft.fftfreqs, multiplied by N)
+  std::vector<int> vfo = { 0, 1, 2, -2, -1 };
+
+  Matrix<std::complex<int>> reso = FFT::computeFrequencies(No);
+
+  for (auto&& entry : index(reso)) {
+    int i = std::get<0>(entry);
+    int j = std::get<1>(entry);
+    auto& val = std::get<2>(entry);
+    
+    ASSERT_NEAR(val.real(), vfo[i], 1e-10);
+    ASSERT_NEAR(val.imag(), vfo[j], 1e-10);
+  }
+}
+/*****************************************************************/
