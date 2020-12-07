@@ -22,8 +22,8 @@ inline Matrix<complex> FFT::transform(Matrix<complex>& m_in) {
   Matrix<complex> m_out(m_in.size());
 
   fftw_plan transform_plan = fftw_plan_dft_2d(m_in.rows(), m_in.cols(), 
-  reinterpret_cast<fftw_complex*>(m_in.data()), 
-  reinterpret_cast<fftw_complex*>(m_out.data()), FFTW_FORWARD, FFTW_ESTIMATE);
+                                              reinterpret_cast<fftw_complex*>(m_in.data()), 
+                                              reinterpret_cast<fftw_complex*>(m_out.data()), FFTW_FORWARD, FFTW_ESTIMATE);
 
 
   fftw_execute(transform_plan);
@@ -34,7 +34,18 @@ inline Matrix<complex> FFT::transform(Matrix<complex>& m_in) {
 
 /* ------------------------------------------------------ */
 
-inline Matrix<complex> FFT::itransform(Matrix<complex>& m_in) {}
+inline Matrix<complex> FFT::itransform(Matrix<complex>& m_in) {
+  Matrix<complex> m_out(m_in.size());
+
+  fftw_plan transform_plan = fftw_plan_dft_2d(m_in.rows(), m_in.cols(), 
+                                              reinterpret_cast<fftw_complex*>(m_in.data()), 
+                                              reinterpret_cast<fftw_complex*>(m_out.data()), FFTW_BACKWARD, FFTW_ESTIMATE);
+
+
+  fftw_execute(transform_plan);
+
+  return m_out;
+}
 
 /* ------------------------------------------------------ */
 
