@@ -28,6 +28,8 @@ inline Matrix<complex> FFT::transform(Matrix<complex>& m_in) {
 
   fftw_execute(transform_plan);
 
+  fftw_destroy_plan(transform_plan);
+
   return m_out;
 
 }
@@ -44,6 +46,8 @@ inline Matrix<complex> FFT::itransform(Matrix<complex>& m_in) {
 
   fftw_execute(transform_plan);
 
+  fftw_destroy_plan(transform_plan);
+  
   return m_out;
 }
 
