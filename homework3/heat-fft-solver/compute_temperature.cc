@@ -57,6 +57,7 @@ void ComputeTemperature::compute(System& system) {
     for (auto& par : system) {
 
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
+        std::cout << theta_n(i,j) << "inc" << deltat*dtheta_over_dt(i,j) << std::endl;
 
         matpt.getTemperature() = std::real(theta_n(i,j) + deltat*dtheta_over_dt(i,j));
         i++;
