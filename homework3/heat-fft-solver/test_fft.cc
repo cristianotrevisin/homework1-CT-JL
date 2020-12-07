@@ -42,11 +42,7 @@ TEST(FFT, computeFrequencies) {
   UInt N = 4; //we test it for not many frequencies
   
   // we create the vector with the wavenumbers (results are from np.fft.fftfreqs, multiplied by N)
-  std::vector<int> vf;
-  vf.push_back(0);
-  vf.push_back(1);
-  vf.push_back(-2);
-  vf.push_back(-1);
+  std::vector<int> vf = { 0, 1, -2, -1 };
 
   Matrix<std::complex<int>> res = FFT::computeFrequencies(N);
 
@@ -64,12 +60,7 @@ TEST(FFT, computeFrequencies) {
   UInt No = 5; //we test it for not many frequencies
   
   // we create the vector with the wavenumbers (results are from np.fft.fftfreqs, multiplied by N)
-  std::vector<int> vfo;
-  vfo.push_back(0);
-  vfo.push_back(1);
-  vfo.push_back(2);
-  vfo.push_back(-2);
-  vfo.push_back(-1);
+  std::vector<int> vfo = { 0, 1, 2, -2, -1 };
 
   Matrix<std::complex<int>> reso = FFT::computeFrequencies(No);
 
