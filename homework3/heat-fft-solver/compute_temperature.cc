@@ -4,27 +4,31 @@
 #include <cmath>
 
 /* -------------------------------------------------------------------------- */
-
+//! Compute one step of the transient heat equation
 void ComputeTemperature::compute(System& system) {
-
+    double rho = 1.0;
+    double C = 1.0;
+    double kappa = 1.0;
+    double L = 100; //TODO
+    double deltat = .1;
     int N = sqrt(system.getNbParticles());
 
-    /* Compute one step of the temperature */
-    Matrix<complex> theta(N);
+    
+    Matrix<complex> theta_n(N);
     Matrix<complex> hv(N);
      
- int i = 0;
- int j = 0;
+    int i = 0;
+    int j = 0;
     for (auto& par : system) {
 
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
-
+/*
         std::cout << matpt.getTemperature() << " "
           << matpt.getHeatRate()<< " -> " << matpt.getPosition() << "-" << matpt.getVelocity() <<
           matpt.getForce() << matpt.getMass() <<  std::endl;
-        std::cout << i << " " << j << std::endl;
+        std::cout << i << " " << j << std::endl;*/
 
-        theta(i,j) = matpt.getTemperature();
+        theta_n(i,j) = matpt.getTemperature();
         hv(i,j)    = matpt.getHeatRate();
         i++;
         if (i >= N){
@@ -32,22 +36,40 @@ void ComputeTemperature::compute(System& system) {
             j++;
         }
     }
-    Matrix<complex> thetah = FFT::transform(theta);
+
+    Matrix<complex> thetah = FFT::transform(theta_n);
     Matrix<std::complex<int>> q_freq = FFT::computeFrequencies(N);
 
-
     Matrix<complex> dthetah_over_dt(N);
+    for (auto&& entry : index(dthetah_over_dt)) {
+        int i = std::get<0>(entry);
+        int j = std::get<1>(entry);
+        auto& val = std::get<2>(entry);
+        // TODO Not L
+        std::complex<double> qfreq_ij = (real(q_freq(i,j)), imag(q_freq(i,j)));
+        val = hv(i,j) - kappa * thetah(i,j) * (2*M_PI/L)*(2*M_PI/L) * qfreq_ij;
+        val /= (rho * C);
+    }
+
+
+
+    i = 0; j = 0;
+    for (auto& par : system) {
+
+        MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
+
+        matpt.getTemperature() = std::real(theta_n(i,j) + deltat*dthetah_over_dt(i,j));
+        i++;
+        if (i >= N){
+            i = 0;
+            j++;
+        }
+    }
 
 
 
 
 
-    
-     // end for loop over particles
-
-    /* Create a matrix from the particles */
-    
-    //Matrix<complex> m(N); 
 
 
 
