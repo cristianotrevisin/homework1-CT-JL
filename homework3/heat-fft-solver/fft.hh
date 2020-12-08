@@ -46,6 +46,11 @@ inline Matrix<complex> FFT::itransform(Matrix<complex>& m_in) {
 
   fftw_execute(transform_plan);
 
+  /* FFTW ouput the unormalized transform */
+  m_out /= (1.0*m_out.size()*m_out.size());
+
+
+
   fftw_destroy_plan(transform_plan);
   
   return m_out;
