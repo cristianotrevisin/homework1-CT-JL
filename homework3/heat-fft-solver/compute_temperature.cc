@@ -3,14 +3,18 @@
 #include "material_point.hh"
 #include <cmath>
 
+ComputeTemperature::ComputeTemperature(Real dt) : dt(dt) {}
+
+void ComputeTemperature::setDeltaT(Real dt) { this->dt = dt; }
+
 /* -------------------------------------------------------------------------- */
 //! Compute one step of the transient heat equation
 void ComputeTemperature::compute(System& system) {
     double rho = 1.0;
     double C = 1.0;
     double kappa = 1.0;
-    double L = 1.0; //TODO
-    double deltat = 1;
+    double L = 2.0; //TODO
+    std::cout << "deltat is" << dt << std::endl;
 
     int N = sqrt(system.getNbParticles());
 
@@ -50,8 +54,12 @@ void ComputeTemperature::compute(System& system) {
         // TODO Not L
         
         qfreq_ij = std::complex<double>(real(q_freq(i,j)), imag(q_freq(i,j)));
+        Real q_x = (2*M_PI/L)*q_freq(i,j).real();
+        Real q_y = (2*M_PI/L)*q_freq(i,j).imag();
+
         //std::cout << q_freq(i,j) << qfreq_ij << real(q_freq(i,j)) << imag(q_freq(i,j)) << std::endl;
-        val = (hvh(i,j) - kappa * thetah(i,j)  * qfreq_ij / (L*L)) / (rho * C);
+        //val = (hvh(i,j) - kappa * thetah(i,j)  * qfreq_ij / (L*L)) / (rho * C);
+        val = (hvh(i,j) - kappa * thetah(i,j)  * (q_x*q_x + q_y*q_y)) / (rho * C);
         
     }
 
@@ -62,8 +70,8 @@ void ComputeTemperature::compute(System& system) {
 
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
         //std::cout << theta_n(i,j) << "inc" << deltat*dtheta_over_dt(i,j) << std::endl;
-        std::cout <<  matpt.getTemperature() << "..." << theta_n(i,j) << "..." << deltat*dtheta_over_dt(i,j)  << std::endl;
-        matpt.getTemperature() = std::real(theta_n(i,j) + deltat*dtheta_over_dt(i,j));
+        //std::cout <<  matpt.getTemperature() << "..." << theta_n(i,j) << "..." << deltat*dtheta_over_dt(i,j)  << std::endl;
+        matpt.getTemperature() = std::real(theta_n(i,j) + dt*dtheta_over_dt(i,j));
         //std::cout <<  matpt.getTemperature()  << std::endl;
         i++;
         if (i >= N){
