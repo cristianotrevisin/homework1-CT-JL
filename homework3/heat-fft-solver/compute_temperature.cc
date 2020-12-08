@@ -16,6 +16,8 @@ void ComputeTemperature::compute(System& system) {
 
     Matrix<complex> theta_n(N);
     Matrix<complex> hv(N);
+    niter ++;
+    std::cout << niter << std::endl;
      
     /* Get the system into matrices to help the fourier transform */
     int i = 0;
@@ -81,7 +83,10 @@ void ComputeTemperature::compute(System& system) {
     i = 0; j = 0;
     for (auto& par : system) {
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
-        matpt.getTemperature() = std::real(theta_n(i,j) + dt*dtheta_over_dt(i,j));
+        if (niter > 0)
+            matpt.getTemperature() = 0;
+        else
+            matpt.getTemperature() = std::real(theta_n(i,j) + dt*dtheta_over_dt(i,j));
         i++;
         if (i >= N){
             i = 0;

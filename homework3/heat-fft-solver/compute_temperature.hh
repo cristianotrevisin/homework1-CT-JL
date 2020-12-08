@@ -18,6 +18,7 @@ private:
   Real rho;      /* mass density */
   Real C;        /* specific heat capacity */
   Real kappa;    /* heat conductivity */
+  int niter =0;
 
 };
 
