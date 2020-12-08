@@ -3,6 +3,7 @@
 #include "compute_temperature.hh"
 #include <gtest/gtest.h>
 #include "material_points_factory.hh"
+#include "system_evolution.hh"
 #include <vector>
 #include "vector.hh"
 
@@ -41,7 +42,8 @@ public:
   UInt N;
   std::vector<MaterialPoint> testpts;
   Real L;
-
+  UInt nsteps = 100000;
+  std::vector<std::shared_ptr<Compute>> computes;
 };
 
 /*****************************************************************/
@@ -56,7 +58,12 @@ TEST_F(CheckTemp,homogeneous_temperature){
     Real kappa=284.1;    /* heat conductivity W/(m*K) */
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
-    temperature->compute(system);
+
+    for (UInt i = 0; i < nsteps; ++i) {
+      for (auto& compute : computes)
+        compute->compute(system);
+    }
+  
 
     for (auto& p : testpts) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
@@ -82,7 +89,11 @@ TEST_F(CheckTemp,sinusoidal_heat){
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
-    temperature->compute(system);
+    for (UInt i = 0; i < nsteps; ++i) {
+      for (auto& compute : computes)
+        compute->compute(system);
+    }
+
     
     for (auto& p : testpts) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
@@ -122,7 +133,11 @@ TEST_F(CheckTemp,volumetric_heat){
     Real kappa=1.;    /* heat conductivity W/(m*K) */
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
-    temperature->compute(system);
+    
+    for (UInt i = 0; i < nsteps; ++i) {
+      for (auto& compute : computes)
+        compute->compute(system);
+    }
     
     for (auto& p : testpts) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
