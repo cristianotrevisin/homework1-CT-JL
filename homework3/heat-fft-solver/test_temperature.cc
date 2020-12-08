@@ -50,8 +50,12 @@ TEST_F(CheckTemp,homogeneous_temperature){
       MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
       pt.getTemperature() = 1.;
     }
+    Real dt = 1;
+    Real rho = 8960;      /* mass density kg/m^3 */
+    Real C= 385;        /* specific heat capacity J/(km*K)  */
+    Real kappa=284.1;    /* heat conductivity W/(m*K) */
 
-    auto temperature = std::make_shared<ComputeTemperature>();
+    auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     temperature->compute(system);
 
     for (auto& p : testpts) {
@@ -71,7 +75,12 @@ TEST_F(CheckTemp,sinusoidal_heat){
       pt.getHeatRate() = (2*M_PI/L)*(2*M_PI/L)*sin(2*M_PI*xyz[0]/L);
     }
     std::cout << "allocation passed" << std::endl;
-    auto temperature = std::make_shared<ComputeTemperature>();
+    Real dt = 1;
+    Real rho = 8960;      /* mass density kg/m^3 */
+    Real C= 385;        /* specific heat capacity J/(km*K)  */
+    Real kappa=284.1;    /* heat conductivity W/(m*K) */
+
+    auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     std::cout << "here" << std::endl;
     temperature->compute(system);
     std::cout << "computation passed" << std::endl;
@@ -100,7 +109,12 @@ TEST_F(CheckTemp,volumetric_heat){
         pt.getHeatRate() = 0.;
     }
     std::cout << "allocation passed" << std::endl;
-    auto temperature = std::make_shared<ComputeTemperature>();
+    Real dt = 1;
+    Real rho = 8960;      /* mass density kg/m^3 */
+    Real C= 385;        /* specific heat capacity J/(km*K)  */
+    Real kappa=284.1;    /* heat conductivity W/(m*K) */
+
+    auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     temperature->compute(system);
     std::cout << "computation passed" << std::endl;  
     for (auto& p : testpts) {
