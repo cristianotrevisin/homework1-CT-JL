@@ -3,16 +3,14 @@
 #include "material_point.hh"
 #include <cmath>
 
-ComputeTemperature::ComputeTemperature(Real dt) : dt(dt) {}
+ComputeTemperature::ComputeTemperature(Real dt, Real rho, Real C, Real kappa) 
+                              : dt(dt), rho(rho), C(C), kappa(kappa) {}
 
 void ComputeTemperature::setDeltaT(Real dt) { this->dt = dt; }
 
 /* -------------------------------------------------------------------------- */
 //! Compute one step of the transient heat equation
 void ComputeTemperature::compute(System& system) {
-    double rho = 1.0;
-    double C = 1.0;
-    double kappa = 1.0;
     double L = 2.0; //TODO
     std::cout << "deltat is" << dt << std::endl;
 

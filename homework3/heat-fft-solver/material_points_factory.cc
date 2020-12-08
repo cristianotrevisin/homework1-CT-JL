@@ -29,7 +29,14 @@ MaterialPointsFactory::createSimulation(const std::string& fname,
   if (side * side != N)
     throw std::runtime_error("number of particles is not square");
 
-  auto temperature = std::make_shared<ComputeTemperature>(timestep);
+  /* Hardcoded values for parameters, we could imagine a Parameter class */
+  /* Here for copper */
+  Real rho = 8960;      /* mass density kg/m^3 */
+  Real C= 385;        /* specific heat capacity J/(km*K)  */
+  Real kappa=284.1;    /* heat conductivity W/(m*K) */
+
+
+  auto temperature = std::make_shared<ComputeTemperature>(timestep, rho, C, kappa);
   this->system_evolution->addCompute(temperature);
 
   return *system_evolution;
