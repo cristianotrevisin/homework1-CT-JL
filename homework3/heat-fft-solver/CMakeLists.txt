@@ -49,9 +49,11 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt")
   add_subdirectory(googletest)
   add_executable(test_kepler test_kepler.cc)
   add_executable(test_fft test_fft.cc)
+  add_executable(test_temperature test_temperature.cc)
   target_link_libraries(test_kepler part gtest_main gtest pthread )
   target_link_libraries(test_fft part gtest_main gtest pthread ${FFTW_LIBRARIES})
-  add_custom_target(test ./test_kepler && ./test_fft DEPENDS part test_kepler test_fft)
+  target_link_libraries(test_temperature part gtest_main gtest pthread ${FFTW_LIBRARIES})
+  add_custom_target(test ./test_kepler && ./test_fft ./test_temperature DEPENDS part test_kepler test_fft test_temperature)
 else()
   message("
 *********************************************
