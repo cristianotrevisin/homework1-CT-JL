@@ -12,11 +12,8 @@ void ComputeTemperature::setDeltaT(Real dt) { this->dt = dt; }
 //! Compute one step of the transient heat equation
 void ComputeTemperature::compute(System& system) {
     double L = 2.0; //TODO
-    std::cout << "deltat is" << dt << std::endl;
-
     int N = sqrt(system.getNbParticles());
 
-    
     Matrix<complex> theta_n(N);
     Matrix<complex> hv(N);
      

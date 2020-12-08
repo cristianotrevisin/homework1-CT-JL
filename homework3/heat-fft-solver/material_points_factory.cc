@@ -31,9 +31,9 @@ MaterialPointsFactory::createSimulation(const std::string& fname,
 
   /* Hardcoded values for parameters, we could imagine a Parameter class */
   /* Here for copper */
-  Real rho = 8960;      /* mass density kg/m^3 */
-  Real C= 385;        /* specific heat capacity J/(km*K)  */
-  Real kappa=284.1;    /* heat conductivity W/(m*K) */
+  Real rho = 8960;       /* mass density kg/m^3 */
+  Real C = 385;          /* specific heat capacity J/(km*K)  */
+  Real kappa = 284.1;    /* heat conductivity W/(m*K) */
 
 
   auto temperature = std::make_shared<ComputeTemperature>(timestep, rho, C, kappa);
