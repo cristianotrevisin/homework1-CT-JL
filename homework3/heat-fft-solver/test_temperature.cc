@@ -14,7 +14,7 @@ public:
   void SetUp() override {
     MaterialPointsFactory::getInstance(); 
     std::vector<MaterialPoint> testpts;
-    UInt N = 20; // number of particles per line
+    UInt N = 4; // number of particles per line
     Real L = 2.; // length of the domain
 
     for (unsigned int i = 0; i < N; ++i){
@@ -71,7 +71,7 @@ TEST_F(CheckTemp,sinusoidal_heat){
     for (auto& p : testpts) {
       MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
       Vector xyz = pt.getPosition();
-      pt.getTemperature() = 1.;
+      pt.getTemperature() = sin(2*M_PI*xyz[0]/L);
       pt.getHeatRate() = (2*M_PI/L)*(2*M_PI/L)*sin(2*M_PI*xyz[0]/L);
     }
     
@@ -82,7 +82,7 @@ TEST_F(CheckTemp,sinusoidal_heat){
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
-    //temperature->compute(system);
+    temperature->compute(system);
     
     for (auto& p : testpts) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
@@ -99,7 +99,14 @@ TEST_F(CheckTemp,volumetric_heat){
     for (auto& p : testpts) {
       MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
       Vector xyz = pt.getPosition();
-      pt.getTemperature() = 1.;
+    
+      if (xyz[0] <= -0.5)
+        pt.getTemperature()=-xyz[0]-1;
+      else if ((xyz[0] > -0.5) && (xyz[0] < 0.5))
+        pt.getTemperature()=xyz[0];
+      else 
+        pt.getTemperature()=-xyz[0]+1;
+
 
       if (xyz[0] == 0.5)
         pt.getHeatRate() = 1.;
@@ -115,12 +122,12 @@ TEST_F(CheckTemp,volumetric_heat){
     Real kappa=1.;    /* heat conductivity W/(m*K) */
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
-    //temperature->compute(system);
+    temperature->compute(system);
     
     for (auto& p : testpts) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
         Vector xyz = pt.getPosition();
-
+        
         if (xyz[0] <= -0.5)
           ASSERT_NEAR(pt.getTemperature(),-xyz[0]-1,1e-10);
         else if ((xyz[0] > -0.5) && (xyz[0] < 0.5))
