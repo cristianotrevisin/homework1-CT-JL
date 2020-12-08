@@ -16,15 +16,15 @@ public:
   void SetUp() override {
     MaterialPointsFactory::getInstance(); 
     std::vector<MaterialPoint> testpts;
-    UInt N = 2; // number of particles per line
+    UInt N = 8; // number of particles per line
     Real L = 2.; // length of the domain
 
-    for (unsigned int i = 0; i < N; ++i){
-        for (unsigned int j = 0; j < N; ++j){
+    for (UInt i = 0; i < N; ++i){
+        for (UInt j = 0; j < N; ++j){
             MaterialPoint p;
 
-            p.getPosition()[0] = -L/2 + i/N*L;
-            p.getPosition()[1] = -L/2 + j/N*L;
+            p.getPosition()[0] = -L/2 + i*L/N;
+            p.getPosition()[1] = -L/2 + j*L/N;
             p.getPosition()[2] = 0;
             
 
@@ -64,7 +64,7 @@ TEST_F(CheckTemp,homogeneous_temperature){
       for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         std::cout << pt.getPosition() << std::endl;
-        //ASSERT_NEAR(pt.getTemperature(),1,1e-10);
+        ASSERT_NEAR(pt.getTemperature(),1,1e-10);
       }
     }
 }
@@ -75,9 +75,8 @@ TEST_F(CheckTemp,homogeneous_temperature){
 TEST_F(CheckTemp,sinusoidal_heat){
     for (auto& p : testpts) {
       MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
-      Vector xyz = pt.getPosition();
-      pt.getTemperature() = sin(2*M_PI*xyz[0]/L);
-      pt.getHeatRate() = (2*M_PI/L)*(2*M_PI/L)*sin(2*M_PI*xyz[0]/L);
+      pt.getTemperature() = sin(2*M_PI*pt.getPosition()[0]/L);
+      pt.getHeatRate() = (2*M_PI/L)*(2*M_PI/L)*sin(2*M_PI*pt.getPosition()[0]/L);
     }
     
     Real dt = 1;
