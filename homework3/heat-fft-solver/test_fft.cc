@@ -34,7 +34,9 @@ TEST(FFT, transform) {
 }
 /*****************************************************************/
 
-TEST(FFT, inverse_transform) {}
+TEST(FFT, inverse_transform) {
+
+}
 /*****************************************************************/
 
 TEST(FFT, computeFrequencies) {
