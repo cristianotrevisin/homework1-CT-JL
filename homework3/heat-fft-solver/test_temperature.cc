@@ -43,7 +43,7 @@ public:
   std::vector<MaterialPoint> testpts;
   Real L;
   UInt nsteps = 100000;
-  std::vector<std::shared_ptr<Compute>> computes;
+
 };
 
 /*****************************************************************/
@@ -60,12 +60,12 @@ TEST_F(CheckTemp,homogeneous_temperature){
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
 
     for (UInt i = 0; i < nsteps; ++i) {
-      for (auto& compute : computes)
-        compute->compute(system);
+      temperature->compute(system);
+
     }
   
 
-    for (auto& p : testpts) {
+    for (auto& p : system) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
 
         ASSERT_NEAR(pt.getTemperature(),1,1e-10);
@@ -90,12 +90,12 @@ TEST_F(CheckTemp,sinusoidal_heat){
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
     for (UInt i = 0; i < nsteps; ++i) {
-      for (auto& compute : computes)
-        compute->compute(system);
+      temperature->compute(system);
+ 
     }
 
     
-    for (auto& p : testpts) {
+    for (auto& p : system) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
         Vector xyz = pt.getPosition();
         ASSERT_NEAR(pt.getTemperature(),sin(2*M_PI*xyz[0]/L),1e-10);
@@ -135,11 +135,11 @@ TEST_F(CheckTemp,volumetric_heat){
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
     for (UInt i = 0; i < nsteps; ++i) {
-      for (auto& compute : computes)
-        compute->compute(system);
+      temperature->compute(system);
+
     }
     
-    for (auto& p : testpts) {
+    for (auto& p : system) {
         MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
         Vector xyz = pt.getPosition();
         

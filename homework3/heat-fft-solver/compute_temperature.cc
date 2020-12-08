@@ -17,7 +17,7 @@ void ComputeTemperature::compute(System& system) {
     Matrix<complex> theta_n(N);
     Matrix<complex> hv(N);
     niter ++;
-    std::cout << niter << std::endl;
+   // std::cout << niter << std::endl;
      
     /* Get the system into matrices to help the fourier transform */
     int i = 0;
@@ -40,16 +40,16 @@ void ComputeTemperature::compute(System& system) {
 
         theta_n(i,j) = matpt.getTemperature();
         hv(i,j)      = matpt.getHeatRate();
-        std::cout << matpt.getTemperature() << " ";
+        //std::cout << matpt.getTemperature() << " ";
         
         i++;
         if (i >= N){
             i = 0;
             j++;
-            std::cout << std::endl;
+           // std::cout << std::endl;
         }
     }
-    std::cout << "__________" << std::endl;
+    //std::cout << "__________" << std::endl;
 
     /* Find the lenght of the system in the same units */
     Real Lx = max_x - min_x;
