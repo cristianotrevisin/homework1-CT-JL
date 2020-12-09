@@ -8,29 +8,31 @@
 #include "vector.hh"
 #include <math.h>
 
-#define TEST_TOLERANCE 1e-1
+#define TEST_TOLERANCE 1e-5
 
 
 /*****************************************************************/
 // Fixture class
 class CheckTemp : public ::testing::Test {
-public:
-  void SetUp() override {
-    MaterialPointsFactory::getInstance(); 
-    std::vector<MaterialPoint> testpts;
+  public:
     UInt N = 64; // number of particles per line
     Real L = 2.; // length of the domain
 
-    for (UInt i = 0; i < N; ++i){
-        for (UInt j = 0; j < N; ++j){
-            MaterialPoint p;
 
-            p.getPosition()[0] = -L/2 + i*L/N;
-            p.getPosition()[1] = -L/2 + j*L/N;
-            p.getPosition()[2] = 0;
-            testpts.push_back(p);
+    void SetUp() override {
+      MaterialPointsFactory::getInstance(); 
+      std::vector<MaterialPoint> testpts;
 
-        }
+      for (UInt i = 0; i < N; ++i){
+          for (UInt j = 0; j < N; ++j){
+              MaterialPoint p;
+
+              p.getPosition()[0] = -L/2 + i*L/(N-1);
+              p.getPosition()[1] = -L/2 + j*L/(N-1);
+              p.getPosition()[2] = 0;
+              testpts.push_back(p);
+
+          }
     }
 
     for (auto& p : testpts) {
@@ -39,8 +41,8 @@ public:
   }
 
   System system;
-  UInt nsteps = 1000;
-  Real dt = 0.00001;
+  UInt nsteps = 100;
+  Real dt = 0.001;
   Real rho = 8960;      /* mass density kg/m^3 */
   Real C= 385;        /* specific heat capacity J/(km*K)  */
   Real kappa=284.1;    /* heat conductivity W/(m*K) */
@@ -52,9 +54,6 @@ TEST_F(CheckTemp,homogeneous_temperature){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         pt.getTemperature() = 1.;
     }
-
-
-
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
 
@@ -74,7 +73,7 @@ TEST_F(CheckTemp,sinusoidal_heat){
   // L = 2 since the domain spans Delta x = 2 and Delta y = 2
   // It is simplified in the equation (this makes it slightly faster as well)
     for(auto& p : system){
-        MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
+      MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
       pt.getTemperature() = sin(M_PI*pt.getPosition()[0]);
       pt.getHeatRate() = (M_PI)*(M_PI)*sin(M_PI*pt.getPosition()[0]);
     }
@@ -104,13 +103,14 @@ TEST_F(CheckTemp,volumetric_heat){
         pt.getTemperature()=xyz[0];
       else 
         pt.getTemperature()=-xyz[0]+1;
+       //std::cout << "(" << xyz[0] << "," << xyz[1] << ")";
 
 
-      if (xyz[0] == 0.5)
+      if (fabs(xyz[0] - 0.5) < L/(2*(N-1)))
         pt.getHeatRate() = 1.;
-      else if (xyz[0] == -0.5)
+      else if (fabs(xyz[0] + 0.5) < L/(2*(N-1))) 
         pt.getHeatRate() = -1.;
-      else 
+      else
         pt.getHeatRate() = 0.;
     }
     
