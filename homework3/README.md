@@ -15,11 +15,8 @@ FFT is a class that handles the fast-Fourier-transform part of the code. It cont
 
 
 ### Question 4.5
-Adding a boundary conditions that forces particles outside the mentioned domain could be accomplished through:
-1. Expanding the domain beyond the value of the radius R;
-2. In the code, where the computations evolve, values outside the domain should progressively be assigned a temperature equal to zero. By choosing a reasonably small integration timestep dt, a null temperature on those points will be ensured. 
-
-The above procedure stems from a physical consideration of the matter. A boundary conditions that sets a fixed value of a state variable inside or outside a given domain of interests behaves like an adsorbing surface. In this specific case, heat is generated inside the circle and will tend to transfer to the particles characterised by different heat source. By integrating the function, the values of the particles near the boundary surface will naturally start to part from zero (or a fixed value). A condition that restores the wanted condition will overwrite these small value differences for every iterations. By choosing a timestep which is small enough, we make an acceptable assumption of a quasi-static transformation (thus justifying said operation) and effectively implement the desired boundary conditions. At the next iteration, the solver will read the superseding condition and thus the behaviour of the particle near the boundary will follow the boundary condition.
+Adding a boundary conditions that forces particles outside the mentioned domain could be accomplished through expanding the domain beyond the value of the radius R (say, to 2R). This condition has been tested.
+FFT will indeed apply periodic boundary conditions and an expanded domain will allow this behaviour to correctly integrate the required boundary condition in the computations.
 
 ### Question 4.6
 To obtain a simulation producing dumps which can be observed through Paraview, the user should follow the hereunder procedure:
@@ -63,11 +60,14 @@ An example is:
 ```
 
 4. The user will then be able to visualise with Paraview. To do so, the software should be launched and the user should navigate to `dumps/`. There, the dataset should be opened through the csv reader (please choose no header, and space as delimiter). 
-To create a visualisation of the data, go to Filters/Alphabetical/Table To Points. Set columns 0, 1, 2 as X, Y, Z (or set Paraview as 2D) and hit Apply. You should  now be able to choose a column for color. We recommend column 13: temp or column 14: heat. By clicking on play, it should animate and time the integration of the transient heat equation. Enjoy !
+To create a visualisation of the data, go to Filters/Alphabetical/Table To Points. Set columns 0, 1, 2 as X, Y, Z (or set Paraview as 2D) and hit Apply. You should  now be able to choose a column for color. We recommend column 13: temp or column 14: heat. By clicking on play, it should animate and time the integration of the transient heat equation.
 
-NB: For the FFTW package to be included and linked to the executable, the relative option in the `CMakeLists.txt` (line 9) should be set as: `ON`.
+NB: For the FFTW package to be included and linked to the executable, the relative option in the `CMakeLists.txt` (line 9) should be set as: `ON`. The GoogleTest package should also be included in the repository beforehand, through the command:
+```
+git submodule add https://github.com/google/googletest.git googletest
 
-Note that material specific parameters are hardcoded to these of copper (expect for the test, which uses kappa=rho=C=1).
+```
+Tests can be ran after `make` by hitting `.\test_fft` for the Fast-Fourier Transform or by typing `.\test_temperature` for the tests on the `computeTemperature.cc` class.
 
 ## Miscellaneous
 ### Test dynamic linking
