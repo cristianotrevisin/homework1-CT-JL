@@ -46,7 +46,7 @@ void ComputeTemperature::compute(System& system) {
         if (i >= N){
             i = 0;
             j++;
-           // std::cout << std::endl;
+            //std::cout << std::endl;
         }
     }
     //std::cout << "__________" << std::endl;
@@ -83,9 +83,9 @@ void ComputeTemperature::compute(System& system) {
     i = 0; j = 0;
     for (auto& par : system) {
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
-        if (niter > 0)
-            matpt.getTemperature() = 0;
-        else
+        //if (niter > 10000000)
+        //    matpt.getTemperature() = 0;
+        //else
             matpt.getTemperature() = std::real(theta_n(i,j) + dt*dtheta_over_dt(i,j));
         i++;
         if (i >= N){

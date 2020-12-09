@@ -8,6 +8,8 @@
 #include "vector.hh"
 #include <math.h>
 
+#define TEST_TOLERANCE 1e-1
+
 
 /*****************************************************************/
 // Fixture class
@@ -26,33 +28,33 @@ public:
             p.getPosition()[0] = -L/2 + i*L/N;
             p.getPosition()[1] = -L/2 + j*L/N;
             p.getPosition()[2] = 0;
-            
-
             testpts.push_back(p);
 
         }
     }
 
     for (auto& p : testpts) {
-
       system.addParticle(std::make_shared<MaterialPoint>(p));
     }
   }
 
   System system;
-  std::vector<MaterialPoint> testpts;
-  UInt nsteps = 10;
+  UInt nsteps = 1000;
+  Real dt = 0.00001;
+  Real rho = 8960;      /* mass density kg/m^3 */
+  Real C= 385;        /* specific heat capacity J/(km*K)  */
+  Real kappa=284.1;    /* heat conductivity W/(m*K) */
 };
 
 /*****************************************************************/
 TEST_F(CheckTemp,homogeneous_temperature){
-    for (auto& p : testpts) {
-      p.getTemperature() = 1.;
+    for(auto& p : system){
+        MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
+        pt.getTemperature() = 1.;
     }
-    Real dt = 1;
-    Real rho = 8960;      /* mass density kg/m^3 */
-    Real C= 385;        /* specific heat capacity J/(km*K)  */
-    Real kappa=284.1;    /* heat conductivity W/(m*K) */
+
+
+
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
 
@@ -60,8 +62,7 @@ TEST_F(CheckTemp,homogeneous_temperature){
       temperature->compute(system);
       for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
-        std::cout << pt.getPosition() << std::endl;
-        ASSERT_NEAR(pt.getTemperature(),1,1e-10);
+        ASSERT_NEAR(pt.getTemperature(),1,TEST_TOLERANCE);
       }
     }
 }
@@ -72,15 +73,11 @@ TEST_F(CheckTemp,homogeneous_temperature){
 TEST_F(CheckTemp,sinusoidal_heat){
   // L = 2 since the domain spans Delta x = 2 and Delta y = 2
   // It is simplified in the equation (this makes it slightly faster as well)
-    for (auto& p : testpts) {
-      MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
+    for(auto& p : system){
+        MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
       pt.getTemperature() = sin(M_PI*pt.getPosition()[0]);
       pt.getHeatRate() = (M_PI)*(M_PI)*sin(M_PI*pt.getPosition()[0]);
     }
-    Real dt = 1;
-    Real rho = 8960;      /* mass density kg/m^3 */
-    Real C= 385;        /* specific heat capacity J/(km*K)  */
-    Real kappa=284.1;    /* heat conductivity W/(m*K) */
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
@@ -89,7 +86,7 @@ TEST_F(CheckTemp,sinusoidal_heat){
       for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         Real x = pt.getPosition()[0];
-        ASSERT_NEAR(pt.getTemperature(),sin(M_PI*x),1e-10);
+        ASSERT_NEAR(pt.getTemperature(),sin(M_PI*x),TEST_TOLERANCE);
       }
     }
 }
@@ -97,8 +94,8 @@ TEST_F(CheckTemp,sinusoidal_heat){
 /*****************************************************************/
 
 TEST_F(CheckTemp,volumetric_heat){   
-    for (auto&& p : testpts) {
-      MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
+    for(auto& p : system){
+        MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
       Vector xyz = pt.getPosition();
     
       if (xyz[0] <= -0.5)
@@ -118,10 +115,9 @@ TEST_F(CheckTemp,volumetric_heat){
     }
     
     // all values are here set to 0 to get the desired final solution
-    Real dt = 1;
-    Real rho = 1.;      /* mass density kg/m^3 */
-    Real C= 1.;        /* specific heat capacity J/(km*K)  */
-    Real kappa=1.;    /* heat conductivity W/(m*K) */
+    rho = 1.;      /* mass density kg/m^3 */
+    C= 1.;        /* specific heat capacity J/(km*K)  */
+    kappa=1.;    /* heat conductivity W/(m*K) */
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
@@ -131,11 +127,11 @@ TEST_F(CheckTemp,volumetric_heat){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         Real x = pt.getPosition()[0];
         if (x <= -0.5)
-          ASSERT_NEAR(pt.getTemperature(),-x-1,1e-10);
+          ASSERT_NEAR(pt.getTemperature(),-x-1,TEST_TOLERANCE);
         else if ((x> -0.5) && (x < 0.5))
-          ASSERT_NEAR(pt.getTemperature(),x,1e-10);
+          ASSERT_NEAR(pt.getTemperature(),x,TEST_TOLERANCE);
         else 
-          ASSERT_NEAR(pt.getTemperature(),-x+1,1e-10);
+          ASSERT_NEAR(pt.getTemperature(),-x+1,TEST_TOLERANCE);
       }
     } 
 }
