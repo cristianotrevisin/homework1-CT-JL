@@ -31,12 +31,13 @@ which will generate a 512x512 grid of particles in file `gen_domain.csv` that ca
 
 2. Secondly, a build folder should be made and selected:
 ```
+# in homework1-CT-JL/homework3/heat-fft-solver
 mkdir build
 cd build
 ```
 and then the following commands will build the executable:
 ```
-cmake ..
+cmake ..   # you may need to install gtests, see NB2.
 make
 mkdir dumps
 ```
@@ -60,14 +61,20 @@ An example is:
 ```
 
 4. The user will then be able to visualise with Paraview. To do so, the software should be launched and the user should navigate to `dumps/`. There, the dataset should be opened through the csv reader (please choose no header, and space as delimiter). 
-To create a visualisation of the data, go to Filters/Alphabetical/Table To Points. Set columns 0, 1, 2 as X, Y, Z (or set Paraview as 2D) and hit Apply. You should  now be able to choose a column for color. We recommend column 13: temp or column 14: heat. By clicking on play, it should animate and time the integration of the transient heat equation.
+To create a visualisation of the data, go to Filters/Alphabetical/Table To Points. Set columns 0, 1, 2 as X, Y, Z (or set Paraview as 2D) and hit Apply. You should  now be able to choose a column for color. We recommend column 13: temp or column 14: heat. By clicking on play, it should animate and time the integration of the transient heat equation. Enjoy !
 
-NB: For the FFTW package to be included and linked to the executable, the relative option in the `CMakeLists.txt` (line 9) should be set as: `ON`. The GoogleTest package should also be included in the repository beforehand, through the command:
+NB: For the FFTW package to be included and linked to the executable, the relative option in the `CMakeLists.txt` (line 9) should be set as: `ON`. 
+
+NB2: The GoogleTest package should also be included in the repository beforehand, through the command:
 ```
-git submodule add https://github.com/google/googletest.git googletest
+git submodule update --init
 
 ```
 Tests can be ran after `make` by hitting `.\test_fft` for the Fast-Fourier Transform or by typing `.\test_temperature` for the tests on the `computeTemperature.cc` class.
+
+NB3: Note that material specific parameters are hardcoded to these of copper (expect for the test, which uses kappa=rho=C=1).
+
+
 
 ## Miscellaneous
 ### Test dynamic linking
