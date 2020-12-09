@@ -8,7 +8,7 @@
 #include "vector.hh"
 #include <math.h>
 
-#define TEST_TOLERANCE 1e-5
+#define TEST_TOLERANCE 1e-3
 
 
 /*****************************************************************/
@@ -41,8 +41,8 @@ class CheckTemp : public ::testing::Test {
   }
 
   System system;
-  UInt nsteps = 100;
-  Real dt = 0.001;
+  UInt nsteps = 1000;
+  Real dt = 0.0001;
   Real rho = 8960;      /* mass density kg/m^3 */
   Real C= 385;        /* specific heat capacity J/(km*K)  */
   Real kappa=284.1;    /* heat conductivity W/(m*K) */
@@ -99,7 +99,7 @@ TEST_F(CheckTemp,volumetric_heat){
     
       if (xyz[0] <= -0.5)
         pt.getTemperature()=-xyz[0]-1;
-      else if ((xyz[0] > -0.5) && (xyz[0] < 0.5))
+      else if ((xyz[0] > -0.5) && (xyz[0] <= 0.5))
         pt.getTemperature()=xyz[0];
       else 
         pt.getTemperature()=-xyz[0]+1;
