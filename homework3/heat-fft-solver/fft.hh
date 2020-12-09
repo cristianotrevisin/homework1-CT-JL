@@ -74,15 +74,12 @@ inline Matrix<std::complex<int>> FFT::computeFrequencies(int size) {
     // if the size is odd
         for (unsigned int i = 0; i < (size-1)/2+1; ++i){
       freq[i] = i;
-//      std::cout << freq[i]<< " ";
     };
     for (unsigned int i = (size-1)/2+1; i < size; ++i){
       freq[i] = i - size;
-     // std::cout << freq[i]<< " ";
     }
     
   }
-  //std::cout<<std::endl;
 
 // writing on matrix
 

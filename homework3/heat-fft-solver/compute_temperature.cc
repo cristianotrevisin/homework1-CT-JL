@@ -38,16 +38,13 @@ void ComputeTemperature::compute(System& system) {
 
         theta_n(i,j) = matpt.getTemperature();
         hv(i,j)      = matpt.getHeatRate();
-        //std::cout << matpt.getHeatRate() << " ";
         
         i++;
         if (i >= N){
             i = 0;
             j++;
-            //std::cout << std::endl;
         }
     }
-    //std::cout << "__________" << std::endl;
 
     /* Find the lenght of the system in the same units */
     Real Lx = max_x - min_x;
@@ -67,10 +64,10 @@ void ComputeTemperature::compute(System& system) {
         int j = std::get<1>(entry);
         auto& val = std::get<2>(entry);
         
-        Real q2_x = (2*M_PI/Lx)*q_freq(i,j).real();
-        Real q2_y = (2*M_PI/Ly)*q_freq(i,j).imag();
+        Real q_x = (2*M_PI/Lx)*q_freq(i,j).real();
+        Real q_y = (2*M_PI/Ly)*q_freq(i,j).imag();
 
-        val = (hvh(i,j) - kappa * thetah(i,j)  * (q2_x + q2_y)) / (rho * C);
+        val = (hvh(i,j) - kappa * thetah(i,j)  * (q_x + q_y)) / (rho * C);
         
     }
 
@@ -81,17 +78,13 @@ void ComputeTemperature::compute(System& system) {
     i = 0; j = 0;
     for (auto& par : system) {
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
-        ////std::cout <<"("<<  "," <<dtheta_over_dt(i,j).real()<< ")";
-        //dtheta_over_dt(i,j).real() <<
         matpt.getTemperature() = std::real(theta_n(i,j) + dt*dtheta_over_dt(i,j));
         i++;
         if (i >= N){
             i = 0;
             j++;
-      //      std::cout << std::endl;
         }
     }
-    //std::cout << "______________" << std::endl;
 }
 
 /* -------------------------------------------------------------------------- */

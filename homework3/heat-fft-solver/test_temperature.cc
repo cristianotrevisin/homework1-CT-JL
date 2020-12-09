@@ -26,12 +26,10 @@ class CheckTemp : public ::testing::Test {
       for (UInt i = 0; i < N; ++i){
           for (UInt j = 0; j < N; ++j){
               MaterialPoint p;
-
               p.getPosition()[0] = -L/2 + i*L/(N-1); // to place N evenly-spaced particles in a row
               p.getPosition()[1] = -L/2 + j*L/(N-1); // idem
               p.getPosition()[2] = 0; // z position is 0
               testpts.push_back(p); // pushing the created particle in the testpts vector
-
           }
     }
 
@@ -106,10 +104,8 @@ TEST_F(CheckTemp,volumetric_heat){
         pt.getTemperature()=xyz[0];
       else 
         pt.getTemperature()=-xyz[0]+1;
-       //std::cout << "(" << xyz[0] << "," << xyz[0] << ")";
 
       // initial heat source
-
       if (fabs(xyz[0] - 0.5) < L/(2*(N-1)))
         pt.getHeatRate() = 1.;
       else if (fabs(xyz[0] + 0.5) < L/(2*(N-1))) 
@@ -117,28 +113,6 @@ TEST_F(CheckTemp,volumetric_heat){
       else
         pt.getHeatRate() = 0.;
     }
-      int i = 0;
-      for(auto& p : system){
-        MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
-      Vector xyz = pt.getPosition();
-        //std::cout << pt.getHeatRate() << " ";
-        i++;
-        //if (i%N==0)
-        //std::cout << std::endl;
-    }
-    //std::cout << "..............."<<std::endl;
-      i = 0;
-      for(auto& p : system){
-        MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
-      Vector xyz = pt.getPosition();
-        //std::cout << pt.getTemperature() << " ";
-        i++;
-        //if (i%N==0)
-       // std::cout << std::endl;
-    }
-    //std::cout << "..............."<<std::endl;
-    
-    
 
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa);
     
@@ -150,7 +124,6 @@ TEST_F(CheckTemp,volumetric_heat){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         Real x = pt.getPosition()[0];
         if (x <= -0.5) {
-          //std::cout << "i"<<i<< " " << x << " "<< pt.getTemperature() << std::endl;
           ASSERT_NEAR(pt.getTemperature(),-x-1,TEST_TOLERANCE);
           }
         else if ((x> -0.5) && (x < 0.5))
