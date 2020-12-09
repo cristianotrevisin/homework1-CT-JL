@@ -16,7 +16,7 @@ public:
   void SetUp() override {
     MaterialPointsFactory::getInstance(); 
     std::vector<MaterialPoint> testpts;
-    UInt N = 8; // number of particles per line
+    UInt N = 64; // number of particles per line
     Real L = 2.; // length of the domain
 
     for (UInt i = 0; i < N; ++i){
@@ -40,11 +40,8 @@ public:
   }
 
   System system;
-  UInt N;
   std::vector<MaterialPoint> testpts;
-  Real L;
   UInt nsteps = 10;
-
 };
 
 /*****************************************************************/
@@ -73,12 +70,13 @@ TEST_F(CheckTemp,homogeneous_temperature){
 /*****************************************************************/
 
 TEST_F(CheckTemp,sinusoidal_heat){
+  // L = 2 since the domain spans Delta x = 2 and Delta y = 2
+  // It is simplified in the equation (this makes it slightly faster as well)
     for (auto& p : testpts) {
       MaterialPoint & pt= dynamic_cast<MaterialPoint&>(p);
-      pt.getTemperature() = sin(2*M_PI*pt.getPosition()[0]/L);
-      pt.getHeatRate() = (2*M_PI/L)*(2*M_PI/L)*sin(2*M_PI*pt.getPosition()[0]/L);
+      pt.getTemperature() = sin(M_PI*pt.getPosition()[0]);
+      pt.getHeatRate() = (M_PI)*(M_PI)*sin(M_PI*pt.getPosition()[0]);
     }
-    
     Real dt = 1;
     Real rho = 8960;      /* mass density kg/m^3 */
     Real C= 385;        /* specific heat capacity J/(km*K)  */
@@ -91,7 +89,7 @@ TEST_F(CheckTemp,sinusoidal_heat){
       for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         Real x = pt.getPosition()[0];
-        ASSERT_NEAR(pt.getTemperature(),sin(2*M_PI*x/L),1e-10);
+        ASSERT_NEAR(pt.getTemperature(),sin(M_PI*x),1e-10);
       }
     }
 }
@@ -141,4 +139,3 @@ TEST_F(CheckTemp,volumetric_heat){
       }
     } 
 }
-
