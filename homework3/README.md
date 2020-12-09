@@ -25,12 +25,12 @@ The above procedure stems from a physical consideration of the matter. A boundar
 To obtain a simulation producing dumps which can be observed through Paraview, the user should follow the hereunder procedure:
 1. Generate an appropriate initial condition file. This will contain a list of particles (that should be a square number!) with their position (3D), velocity field (3D), force field (3D), mass, initial temperature and heat flux. If the end user desires to apply the conditions referred to in question 4.6, the included Python script ```generate_heat_source.py``` should be used. This script can be launched as 
 ```
-python generate_heat_source.py -l 1 -n 512 -r 1
+python generate_heat_source.py -l 2 -n 512 -r 1
 ```
-which will generate a 512x512 grid of particles in file `gen_domain.csv` that can be used as input of the main particles function. The main arguments are:
+which will generate a 512x512 grid of particles in file `gen_domain.csv` that can be used as input of the main particles function (see below). The main arguments are:
 * ```-l``` the length of the domain (a side);
 * ```-n``` the number of particles per row;
-* ```-r``` the radius of the domain giving the initial heat source referred in Q4.5.
+* ```-r``` the radius of the domain giving the initial heat source referred to in Q4.5.
 
 2. Secondly, a build folder should be made and selected:
 ```
@@ -53,7 +53,7 @@ where the arguments are:
 
 * ```nsteps (int)``` are the number of integration steps;
 * ```dump freq (int)``` controls the dumping frequency (i.e. the frequency at which the script will save to file the partial results);
-* ```input.csv (str)``` is the name of the input file where the partices are located;
+* ```input.csv (str)``` is the name of the input file where the partices are located (`gen_domain.csv` if the user wishes to apply the conditions of question 4.6);
 * ```particle_type (str)``` handles the type of particles; it should be equal to ```material_point``` for the purpose of this exercise;
 * ```timestep (float)``` is the timestep of the integration.
 
