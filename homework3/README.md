@@ -42,6 +42,18 @@ which will generate a 512x512 grid of particles in file `gen_domain.csv` that ca
 * ```-n``` the number of particles per row;
 * ```-r``` the radius of the domain giving the initial heat source referred in Q4.5.
 
+So a complete workflow for question 4.6 looks like this:
+```
+python generate_heat_source.py -l 2 -n 512 -r 1
+cd build/
+cmake ..
+make
+mkdir dumps
+./particles 10000 100 ../gen_domain.csv material_point .31
+```
+then open paraview, navigate to `dumps/`. There, open the dataset using the csv reader (choose no header, and space as delimiter). Create an visual of the data: go to Filters/Alphabetical/Table To Points. Set columns 0, 1, 2 as X, Y, Z (or tell paraview it's 2D). Apply. You should be able to choose a column for color: choose column 13: temp (or
+column 14:heat, but it's a bit more boring). Now click on play, it should animate it time the integration of the transcient heat equation.
+
 ## Miscellaneous
 ### Test dynamic linking
 ````

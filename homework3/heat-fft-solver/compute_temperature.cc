@@ -16,7 +16,6 @@ void ComputeTemperature::compute(System& system) {
 
     Matrix<complex> theta_n(N);
     Matrix<complex> hv(N);
-   // std::cout << niter << std::endl;
      
     /* Get the system into matrices to help the fourier transform */
     int i = 0;
@@ -39,7 +38,7 @@ void ComputeTemperature::compute(System& system) {
 
         theta_n(i,j) = matpt.getTemperature();
         hv(i,j)      = matpt.getHeatRate();
-        //std::cout << matpt.getTemperature() << " ";
+        //std::cout << matpt.getHeatRate() << " ";
         
         i++;
         if (i >= N){
@@ -53,6 +52,7 @@ void ComputeTemperature::compute(System& system) {
     /* Find the lenght of the system in the same units */
     Real Lx = max_x - min_x;
     Real Ly = max_y - min_y;
+
 
     /* Space fourier transform and unscalled frequencies */
     Matrix<complex> thetah = FFT::transform(theta_n);
@@ -68,10 +68,10 @@ void ComputeTemperature::compute(System& system) {
         auto& val = std::get<2>(entry);
         
         qfreq_ij = std::complex<double>(real(q_freq(i,j)), imag(q_freq(i,j)));
-        Real q_x = (2*M_PI/Lx)*q_freq(i,j).real();
-        Real q_y = (2*M_PI/Ly)*q_freq(i,j).imag();
+        Real q2_x = (2*M_PI/Lx)*q_freq(i,j).real();
+        Real q2_y = (2*M_PI/Ly)*q_freq(i,j).imag();
 
-        val = (hvh(i,j) - kappa * thetah(i,j)  * (q_x*q_x + q_y*q_y)) / (rho * C);
+        val = (hvh(i,j) - kappa * thetah(i,j)  * (q2_x + q2_y)) / (rho * C);
         
     }
 
@@ -82,13 +82,17 @@ void ComputeTemperature::compute(System& system) {
     i = 0; j = 0;
     for (auto& par : system) {
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
+        ////std::cout <<"("<<  "," <<dtheta_over_dt(i,j).real()<< ")";
+        //dtheta_over_dt(i,j).real() <<
         matpt.getTemperature() = std::real(theta_n(i,j) + dt*dtheta_over_dt(i,j));
         i++;
         if (i >= N){
             i = 0;
             j++;
+      //      std::cout << std::endl;
         }
     }
+    //std::cout << "______________" << std::endl;
 }
 
 /* -------------------------------------------------------------------------- */
