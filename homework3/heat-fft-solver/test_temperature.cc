@@ -8,14 +8,14 @@
 #include "vector.hh"
 #include <math.h>
 
-#define TEST_TOLERANCE 1e-1
+#define TEST_TOLERANCE 1e-2
 
 
 /*****************************************************************/
 // Fixture class
 class CheckTemp : public ::testing::Test {
   public:
-    UInt N = 13; // number of particles per line
+    UInt N = 100; // number of particles per line
     Real L = 2.; // length of the domain
 
 
@@ -41,8 +41,8 @@ class CheckTemp : public ::testing::Test {
   }
 
   System system;
-  UInt nsteps = 1000;   /* number of steps to be tested */
-  Real dt = 0.00001; /* timestep */
+  UInt nsteps = 10;   /* number of steps to be tested */
+  Real dt = 0.0001; /* timestep */
     // all values are here set to 1 to get the desired final solution
   Real  rho = 1.;      /* mass density kg/m^3 */
   Real  C= 1.;        /* specific heat capacity J/(km*K)  */
@@ -106,7 +106,7 @@ TEST_F(CheckTemp,volumetric_heat){
         pt.getTemperature()=xyz[0];
       else 
         pt.getTemperature()=-xyz[0]+1;
-       //std::cout << "(" << xyz[0] << "," << xyz[1] << ")";
+       //std::cout << "(" << xyz[0] << "," << xyz[0] << ")";
 
       // initial heat source
 

@@ -67,7 +67,6 @@ void ComputeTemperature::compute(System& system) {
         int j = std::get<1>(entry);
         auto& val = std::get<2>(entry);
         
-        qfreq_ij = std::complex<double>(real(q_freq(i,j)), imag(q_freq(i,j)));
         Real q2_x = (2*M_PI/Lx)*q_freq(i,j).real();
         Real q2_y = (2*M_PI/Ly)*q_freq(i,j).imag();
 
