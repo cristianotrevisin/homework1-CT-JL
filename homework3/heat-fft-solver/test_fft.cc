@@ -69,8 +69,8 @@ for (auto&& entry : index(m)) {
 
 
 }
-/*****************************************************************/
 
+/*****************************************************************/
 TEST(FFT, computeFrequencies) {
   // We deem reasonable just testing one even and one odd case, as this
   // will help us highlight whether the procedure is working correctly
@@ -99,7 +99,6 @@ TEST(FFT, computeFrequencies) {
   }
 
   // odd N
-
   UInt No = 5;
   
   // we create the vector with the wavenumbers 

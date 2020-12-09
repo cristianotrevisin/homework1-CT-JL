@@ -39,11 +39,11 @@ class CheckTemp : public ::testing::Test {
   }
 
   System system;
-  UInt nsteps = 10;   /* number of steps to be tested */
-  Real dt = 0.0001; /* timestep */
-    // all values are here set to 1 to get the desired final solution
+  UInt nsteps = 10;  /* number of steps to be tested. We test each step */
+  Real dt = 0.0001;  /* timestep */
+  // all values are here set to 1 to get the desired final solution
   Real  rho = 1.;      /* mass density kg/m^3 */
-  Real  C= 1.;        /* specific heat capacity J/(km*K)  */
+  Real  C=  1.;        /* specific heat capacity J/(km*K)  */
   Real  kappa=1.;    /* heat conductivity W/(m*K) */
 
 };
@@ -58,7 +58,7 @@ TEST_F(CheckTemp,homogeneous_temperature){
     auto temperature = std::make_shared<ComputeTemperature>(dt, rho, C, kappa); // call computer
 
     for (UInt i = 0; i < nsteps; ++i) {
-      temperature->compute(system); // iterate
+      temperature->compute(system); // iterate and compute each state
       for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         ASSERT_NEAR(pt.getTemperature(),1,TEST_TOLERANCE); // test at each iteration, for every particle
@@ -91,7 +91,6 @@ TEST_F(CheckTemp,sinusoidal_heat){
 }
 
 /*****************************************************************/
-
 TEST_F(CheckTemp,volumetric_heat){   
     for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
@@ -119,7 +118,6 @@ TEST_F(CheckTemp,volumetric_heat){
     // test
     for (UInt i = 0; i < nsteps; ++i) {
       temperature->compute(system);
-      //exit(0);
       for(auto& p : system){
         MaterialPoint & pt = dynamic_cast<MaterialPoint&>(p);
         Real x = pt.getPosition()[0];

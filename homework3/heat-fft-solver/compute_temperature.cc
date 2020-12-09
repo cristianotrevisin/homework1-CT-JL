@@ -17,14 +17,16 @@ void ComputeTemperature::compute(System& system) {
     Matrix<complex> theta_n(N);
     Matrix<complex> hv(N);
      
-    /* Get the system into matrices to help the fourier transform */
-    int i = 0;
-    int j = 0;
-    /* We assume the system to be a rectangular grid with a square number of MaterialPoint */
+    /* We assume the system to be a rectangular grid with a square number of MaterialPoint. We assume
+    every point to be given in order. However we still need to compute the domain size */
     Real max_x = std::numeric_limits<Real>::min();
     Real min_x = std::numeric_limits<Real>::max();
     Real max_y = std::numeric_limits<Real>::min();
     Real min_y = std::numeric_limits<Real>::max();
+
+    /* Build the system into matrices to use the fourier transform & matrix operations */
+    int i = 0;
+    int j = 0;
     for (auto& par : system) {
 
         MaterialPoint & matpt = dynamic_cast<MaterialPoint&>(par);
@@ -56,7 +58,7 @@ void ComputeTemperature::compute(System& system) {
     Matrix<std::complex<int>> q_freq = FFT::computeFrequencies(N);
     Matrix<complex> hvh = FFT::transform(hv);
 
-    /* Compute, for each particle, it's Delta in time in fourier space */
+    /* Compute, for each particle, it's Delta t in time in fourier space */
     std::complex<double> qfreq_ij;
     Matrix<complex> dthetah_over_dt(N);
     for (auto&& entry : index(dthetah_over_dt)) {
