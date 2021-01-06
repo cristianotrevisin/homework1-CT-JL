@@ -2,3 +2,6 @@
 	path = homework3/heat-fft-solver/googletest
 	url = https://github.com/google/googletest.git
 	branch = master
+[submodule "homework4/particles-pybind/pybind11"]
+	path = homework4/particles-pybind/pybind11
+	url = https://github.com/pybind/pybind11.git
