@@ -16,6 +16,8 @@ import glob
 #class optimiser:
 def readPositions(planet_name,directory):
     filelist = sorted(glob.glob(os.path.join(setdir, './step-*.csv')))
+    if len(filelist) != 365:
+        raise Exception('The length of the input datafile is not 365!')
     trajectory = np.empty((0,3), float)
     for file in filelist:
         a = pd.read_csv(file, sep = '\s',engine='python')
@@ -25,6 +27,13 @@ def readPositions(planet_name,directory):
         trajectory = np.append(trajectory, planet_position, axis = 0)
     return trajectory
             
+def computeError(positions,positions_ref):
+    SSR = 0
+    for i in range(365):
+        for j in range(3):
+            SSR += (positions[i,j]-positions_ref[i,j])**2
+    return np.sqrt(SSR)
+
 
                 
 cwd = os.getcwd()
