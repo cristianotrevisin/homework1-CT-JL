@@ -10,7 +10,7 @@ import numpy as np
 import os
 import pandas as pd
 import glob
-
+import scipy
 
 import sys
 import argparse
@@ -94,7 +94,9 @@ def runAndComputeError(scale,planet_name,input_file,nb_steps,freq):
     
     return err
 
-#def optimiser(planet_name,input_file,nb_steps,freq)
+def optimiser(planet_name,input_file,nb_steps,freq):
+    x0 = 1
+    scipy.optimize.fmin(runAndComputeError, x0)
     
     
     
