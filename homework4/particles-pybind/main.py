@@ -65,7 +65,6 @@ def main(nsteps,freq,filename,particle_type,timestep):
                 raise e
 
     evol = factory.createSimulation(filename, timestep, createComputes)
-    print(type(evol.getSystem()))
     dumper = CsvWriter("out.csv")
     
     dumper.write(evol.getSystem())
