@@ -77,5 +77,7 @@ PYBIND11_MODULE(pypart, m) {
       .def(py::init<const std::string&>())
       .def("write", &CsvWriter::write);
 
+  py::class_<SystemEvolution>(m, "SystemEvolution")
+    .def("getSystem", &SystemEvolution::getSystem);
   
 }
