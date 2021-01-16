@@ -73,7 +73,9 @@ PYBIND11_MODULE(pypart, m) {
 
   py::class_<ComputeVerletIntegration, Compute, std::shared_ptr<ComputeVerletIntegration>>(m, "ComputeVerletIntegration", py::dynamic_attr());
 
-
+	py::class_<CsvWriter>(m, "CsvWriter")
+      .def(py::init<const std::string&>())
+      .def("write", &CsvWriter::write);
 
   
 }
