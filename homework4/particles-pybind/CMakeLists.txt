@@ -97,7 +97,7 @@ endif(DOXYGEN_FOUND)
 # Pybind
 ################################################################
 
-option (USE_PYTHON "Use pybind library" OFF) 
+option (USE_PYTHON "Use pybind library" ON) 
 
 if (USE_PYTHON)
 add_subdirectory(pybind11)
