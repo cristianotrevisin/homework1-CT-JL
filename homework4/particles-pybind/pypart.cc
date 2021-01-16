@@ -60,32 +60,17 @@ PYBIND11_MODULE(pypart, m) {
         (SystemEvolution & (PlanetsFactory::*)(const std::string &, Real,py::function))(&PlanetsFactory::createSimulation), 
         py::return_value_policy::reference);
 
-/* 
-Memory management: using shared pointers as object holder
 
-struct AnimalShared {
-  std::string name;
-};
-
-std::shared_ptr<AnimalShared> get_shared_ptr() {
-  return std::make_shared<AnimalShared>();
-}
-
-std::vector<std::shared_ptr<AnimalShared>> vec_animal_shared;
-void register_animal_shared(std::shared_ptr<AnimalShared> ptr) {
-  vec_animal_shared.push_back(ptr);
-};
-py::class_<AnimalShared, std::shared_ptr<AnimalShared>>(m, "AnimalShared")
-      .def_readwrite("name", &AnimalShared::name);
-
-  m.def("get_shared_ptr", &get_shared_ptr);
-
-  m.def("register_animal_shared", &register_animal_shared);
-*/
   py::class_<Compute, std::shared_ptr<Compute>>(m, "Compute");
   py::class_<ComputeInteraction, Compute, std::shared_ptr<ComputeInteraction>>(m, "ComputeInteraction");
   py::class_<ComputeGravity, Compute, std::shared_ptr<ComputeGravity>>(m, "ComputeGravity", py::dynamic_attr());
-  py::class_<ComputeTemperature, Compute, std::shared_ptr<ComputeTemperature>>(m, "ComputeTemperature", py::dynamic_attr());
+  py::class_<ComputeTemperature, Compute, std::shared_ptr<ComputeTemperature>>(m, "ComputeTemperature", py::dynamic_attr())
+      .def_property_readwrite("conductivity", &ComputeTemperature::conductivity)
+      .def_property_readwrite("L", &ComputeTemperature::L)
+      .def_property_readwrite("capacity", &ComputeTemperature::capacity)
+      .def_property_readwrite("density", &ComputeTemperature::density)
+      .def_property_readwrite("deltat", &ComputeTemperature::deltat);
+
   py::class_<ComputeVerletIntegration, Compute, std::shared_ptr<ComputeVerletIntegration>>(m, "ComputeVerletIntegration", py::dynamic_attr());
 
 
