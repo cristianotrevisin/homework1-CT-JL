@@ -19,6 +19,7 @@ PYBIND11_MODULE(pypart, m) {
     .def("getInstance",
         &ParticlesFactoryInterface::getInstance, 
         py::return_value_policy::reference)
+    /* we didn't manage to get something worthwile using py::overload_cast and as https://piazza.com/class/kenurrq73ut30c?cid=45_f1 this worked for us */
     .def("createSimulation",
         (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real))(&ParticlesFactoryInterface::createSimulation),
         py::return_value_policy::reference)
