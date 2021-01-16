@@ -65,11 +65,11 @@ PYBIND11_MODULE(pypart, m) {
   py::class_<ComputeInteraction, Compute, std::shared_ptr<ComputeInteraction>>(m, "ComputeInteraction");
   py::class_<ComputeGravity, Compute, std::shared_ptr<ComputeGravity>>(m, "ComputeGravity", py::dynamic_attr());
   py::class_<ComputeTemperature, Compute, std::shared_ptr<ComputeTemperature>>(m, "ComputeTemperature", py::dynamic_attr())
-      .def_property_readwrite("conductivity", &ComputeTemperature::conductivity)
-      .def_property_readwrite("L", &ComputeTemperature::L)
-      .def_property_readwrite("capacity", &ComputeTemperature::capacity)
-      .def_property_readwrite("density", &ComputeTemperature::density)
-      .def_property_readwrite("deltat", &ComputeTemperature::deltat);
+      .def_property_readonly("conductivity", &ComputeTemperature::getConductivity)
+      .def_property_readonly("L", &ComputeTemperature::getL)
+      .def_property_readonly("capacity", &ComputeTemperature::getCapacity)
+      .def_property_readonly("density", &ComputeTemperature::getDensity)
+      .def_property_readonly("deltat", &ComputeTemperature::getDeltat);
 
   py::class_<ComputeVerletIntegration, Compute, std::shared_ptr<ComputeVerletIntegration>>(m, "ComputeVerletIntegration", py::dynamic_attr());
 
