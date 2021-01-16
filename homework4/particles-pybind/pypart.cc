@@ -20,21 +20,21 @@ PYBIND11_MODULE(pypart, m) {
         &ParticlesFactoryInterface::getInstance, 
         py::return_value_policy::reference)
     .def("createSimulation",
-        (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real))&ParticlesFactoryInterface::createSimulation,
+        (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real))(&ParticlesFactoryInterface::createSimulation),
         py::return_value_policy::reference)
     .def("createSimulation",
-       (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real,py::function))&ParticlesFactoryInterface::createSimulation, 
+       (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real,py::function))(&ParticlesFactoryInterface::createSimulation), 
         py::return_value_policy::reference);
-  /*
+  
   py::class_<MaterialPointsFactory, ParticlesFactoryInterface>(m, "MaterialPointsFactory")
     .def("getInstance", 
         &MaterialPointsFactory::getInstance, 
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real, py::function>(&MaterialPointsFactory::createSimulation),
+        (SystemEvolution & (MaterialPointsFactory::*)(const std::string &, Real))(&MaterialPointsFactory::createSimulation),
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real>(&MaterialPointsFactory::createSimulation),
+        (SystemEvolution & (MaterialPointsFactory::*)(const std::string &, Real,py::function))(&MaterialPointsFactory::createSimulation),
         py::return_value_policy::reference);
   
   py::class_<PingPongBallsFactory, ParticlesFactoryInterface>(m, "PingPongBallsFactory")
@@ -42,10 +42,10 @@ PYBIND11_MODULE(pypart, m) {
         &PingPongBallsFactory::getInstance, 
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real, py::function>(&PingPongBallsFactory::createSimulation), 
+        (SystemEvolution & (PingPongBallsFactory::*)(const std::string &, Real))(&PingPongBallsFactory::createSimulation), 
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real>(&PingPongBallsFactory::createSimulation), 
+        (SystemEvolution & (PingPongBallsFactory::*)(const std::string &, Real,py::function))(&PingPongBallsFactory::createSimulation),  
         py::return_value_policy::reference);
   
   py::class_<PlanetsFactory, ParticlesFactoryInterface>(m, "PlanetsFactory")
@@ -53,11 +53,11 @@ PYBIND11_MODULE(pypart, m) {
         &PlanetsFactory::getInstance, 
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real, py::function>(&PlanetsFactory::createSimulation), 
+        (SystemEvolution & (PlanetsFactory::*)(const std::string &, Real))(&PlanetsFactory::createSimulation), 
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real>(&PlanetsFactory::createSimulation), 
+        (SystemEvolution & (PlanetsFactory::*)(const std::string &, Real,py::function))(&PlanetsFactory::createSimulation), 
         py::return_value_policy::reference);
-*/
+
   
 }
