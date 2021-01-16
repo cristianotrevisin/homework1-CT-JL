@@ -14,6 +14,8 @@ PYBIND11_MODULE(pypart, m) {
 
   m.doc() = "pybind of the Particles project, submission of Cristiano Trevisin & Joseph Lemaitre";
 
+  py::class_<System>(m, "System");
+
   // bind the routines here
   py::class_<ParticlesFactoryInterface>(m, "ParticlesFactoryInterface")
     .def("getInstance",
@@ -63,21 +65,29 @@ PYBIND11_MODULE(pypart, m) {
 
   py::class_<Compute, std::shared_ptr<Compute>>(m, "Compute");
   py::class_<ComputeInteraction, Compute, std::shared_ptr<ComputeInteraction>>(m, "ComputeInteraction");
-  py::class_<ComputeGravity, Compute, std::shared_ptr<ComputeGravity>>(m, "ComputeGravity", py::dynamic_attr());
+  py::class_<ComputeGravity, Compute, std::shared_ptr<ComputeGravity>>(m, "ComputeGravity", py::dynamic_attr())
+    .def(py::init<>())
+    .def("setG", &ComputeGravity::setG);
   py::class_<ComputeTemperature, Compute, std::shared_ptr<ComputeTemperature>>(m, "ComputeTemperature", py::dynamic_attr())
-      .def_property_readonly("conductivity", &ComputeTemperature::getConductivity)
-      .def_property_readonly("L", &ComputeTemperature::getL)
-      .def_property_readonly("capacity", &ComputeTemperature::getCapacity)
-      .def_property_readonly("density", &ComputeTemperature::getDensity)
-      .def_property_readonly("deltat", &ComputeTemperature::getDeltat);
+    .def_property_readonly("conductivity", &ComputeTemperature::getConductivity)
+    .def_property_readonly("L", &ComputeTemperature::getL)
+    .def_property_readonly("capacity", &ComputeTemperature::getCapacity)
+    .def_property_readonly("density", &ComputeTemperature::getDensity)
+    .def_property_readonly("deltat", &ComputeTemperature::getDeltat);
 
-  py::class_<ComputeVerletIntegration, Compute, std::shared_ptr<ComputeVerletIntegration>>(m, "ComputeVerletIntegration", py::dynamic_attr());
+  py::class_<ComputeVerletIntegration, Compute, std::shared_ptr<ComputeVerletIntegration>>(m, "ComputeVerletIntegration", py::dynamic_attr())
+    .def(py::init<Real>())
+    .def("addInteraction", &ComputeVerletIntegration::addInteraction);;
 
 	py::class_<CsvWriter>(m, "CsvWriter")
       .def(py::init<const std::string&>())
       .def("write", &CsvWriter::write);
 
   py::class_<SystemEvolution>(m, "SystemEvolution")
-    .def("getSystem", &SystemEvolution::getSystem);
-  
+    .def("getSystem", &SystemEvolution::getSystem)
+    .def("addCompute", &SystemEvolution::addCompute)
+    .def("evolve", &SystemEvolution::evolve)
+    .def("setDumpFreq", &SystemEvolution::setDumpFreq)
+    .def("setNSteps", &SystemEvolution::setNSteps);
+
 }
