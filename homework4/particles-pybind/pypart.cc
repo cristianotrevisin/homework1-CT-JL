@@ -20,10 +20,10 @@ PYBIND11_MODULE(pypart, m) {
         &ParticlesFactoryInterface::getInstance, 
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real, py::function>(&ParticlesFactoryInterface::createSimulation<py::function>), 
+        (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real))&ParticlesFactoryInterface::createSimulation,
         py::return_value_policy::reference)
     .def("createSimulation",
-        py::overload_cast<const std::string &, Real>(&ParticlesFactoryInterface::createSimulation<py::function>), 
+       (SystemEvolution & (ParticlesFactoryInterface::*)(const std::string &, Real,py::function))&ParticlesFactoryInterface::createSimulation, 
         py::return_value_policy::reference);
   /*
   py::class_<MaterialPointsFactory, ParticlesFactoryInterface>(m, "MaterialPointsFactory")
