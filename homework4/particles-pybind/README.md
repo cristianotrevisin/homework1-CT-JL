@@ -1,4 +1,4 @@
-# Homework 4 by Cristino Trevisin and Joseph Lemaitre
+# Homework 4 by Cristiano Trevisin and Joseph Lemaitre
 
 ## Instructions for running the scripts
 ### Main script
