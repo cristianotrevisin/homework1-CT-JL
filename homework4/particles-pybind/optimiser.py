@@ -100,18 +100,21 @@ def optimiser(planet_name,input_file,nb_steps,freq):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Particles code optimiser')
+    parser.add_argument('filename', type=str,
+                        help='start/input filename',
+                        default = '../init.csv')
     parser.add_argument('nb_steps', type=int,
                         help='specify the number of steps to perform',
                         default = 365)
     parser.add_argument('freq', type=int,
                         help='specify the frequency for dumps',
                         default = 1)
-    parser.add_argument('filename', type=str,
-                        help='start/input filename',
-                        default = '../init.csv')
     parser.add_argument('timestep', type=float,
                         help='timestep',
                         default = 1)
+    parser.add_argument('planet_name', type=str,
+                        help='name of planet to correct',
+                        default = 'mercury')
     
     input_filename = 'init.csv'
     cwd = os.getcwd()
