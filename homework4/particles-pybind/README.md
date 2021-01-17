@@ -29,8 +29,9 @@ python3.8 optimiser.py ../init.csv 365 1 1 mercury
 ```
 Since the optimiser is written to correct the initial velocity for a planet, we deemed not necessary to grant the end-user the option to choose the desired particle solver and the options `ping_pong` and `material_point` are disabled. We allow, however, tweaking, by letting the user choose the name of the planet to optimise. In the spirit of the exercise, we set the default value for `mercury`, as we did for the number of steps `nb_steps = 365`, the frequency `freq = 1` and the timestep `timestep = 1`. If the user so wishes, a simpler command can be hit:
 ```
-python3.8 optimiser.py ../init.csv
+python3.8 optimiser.py
 ```
+The optimiser script is written using a class scheme to allow better factorisation and management of the arguments. For this reason, the function may have slightly different input to those requested in the project, as fundamental arguments (i.e. frequency, number of steps, pianet name, and timestep) are managed as objects of the class. 
 
 ## Answers to questions
 ### Exercise 1.2
