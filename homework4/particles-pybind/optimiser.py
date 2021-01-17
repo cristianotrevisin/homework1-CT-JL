@@ -22,6 +22,8 @@ from pypart import ComputeVerletIntegration
 
 
 class Optimiser:
+    """Optimising class to yield the correct initial velocity for the desired planet."""
+    
     def __init__(self):
         
         parser = argparse.ArgumentParser(description='Particles code optimiser')
@@ -52,6 +54,11 @@ class Optimiser:
         self.history = []
         
     def readPositions(self,directory):
+        """Read trajectory from dumping folder.
+        
+        Input: directory where the dumps are stored.
+        Output: a numpy with the position with time.
+        """
         filelist = sorted(glob.glob(os.path.join(directory, './step-*.csv')))
         if len(filelist) != 365:
             raise Exception('The length of the input datafile is not 365!')
@@ -65,6 +72,11 @@ class Optimiser:
         return trajectory
                 
     def computeError(self,positions,positions_ref):
+        """Compute error based on the difference between two trajectories.
+        
+        Input: trajectories (two 365x3 numpy).
+        Output: a float.
+        """
         SSR = 0
         for i in range(365):
             for j in range(3):
@@ -72,6 +84,11 @@ class Optimiser:
         return np.sqrt(SSR)
     
     def generateInput(self,scale,output_filename):
+        """Generate a new input file by scaling the initial velocity for the planet.
+        
+        Input: the scaling factor and the output filename.
+        Output: it saves automatically the output file.
+        """
         input_df = pd.read_csv(self.filename, sep = '\s',header=0,engine='python')
         #input_df.loc[input_df.name == planet_name, ['VX','VY','VZ']] *= scale
         row_index = input_df.index.get_loc(input_df.index[input_df['name'] == self.planet_name][0])
@@ -80,6 +97,11 @@ class Optimiser:
         self.filename = output_filename
         
     def launchParticles(self):
+        """Launch the particle solver and save dumps in a given folder.
+        
+        Input: all relevant inputs are class objects.
+        Output: it saves the dumps in the given folder.
+        """
         PlanetsFactory.getInstance()
         factory = ParticlesFactoryInterface.getInstance()
     
@@ -113,6 +135,11 @@ class Optimiser:
         evol.evolve()
         
     def runAndComputeError(self,scale):
+        """Run the particle code and comput the error.
+        
+        Input: the scaling parameter for the initial velocity correction.
+        Output: the error between the simulated and the reference trajectory.
+        """
         output_filename = 'init_scaled.csv'
         self.generateInput(scale,output_filename)
         self.launchParticles()
@@ -126,11 +153,13 @@ class Optimiser:
     def callback(self,xk):
             """
             Append to the history vector the iterations and the function evaluation at each step.
-            Parameters
+            
+            Parameters            
             ----------
             xk : numpy array
                 Partial iterations.
-            Returns
+                
+            Returns            
             -------
             None.
             """
@@ -138,6 +167,11 @@ class Optimiser:
             #history= np.append(history, [[xk, runAndComputeError(xk,planet_name,input_file,nb_steps,freq,timestep)]], axis = 0)
     
     def optimiser(self):
+        """Find the scaling parameter that minimise the error.
+        
+        Input: none.
+        Output: the scaling parameter.
+        """
         x0 = 1
         self.history.append(np.transpose(np.r_[x0, self.runAndComputeError(x0)]))
         #history= np.append(history, [[x0, runAndComputeError(x0,planet_name,input_file,nb_steps,freq,timestep)]], axis = 0)
@@ -146,6 +180,11 @@ class Optimiser:
         return scaling_factor
     
     def plot(self):
+        """Plot the path of the solver.
+        
+        Input: none.
+        Output: a plot saved as a pdf.
+        """
         history = np.concatenate(self.history).reshape(len(self.history), 2)
         fig = plt.figure()
         plt.plot(history[:,0], history[:,1])
