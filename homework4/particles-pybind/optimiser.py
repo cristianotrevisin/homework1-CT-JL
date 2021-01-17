@@ -77,6 +77,7 @@ class Optimiser:
         row_index = input_df.index.get_loc(input_df.index[input_df['name'] == self.planet_name][0])
         input_df.iloc[row_index,3:6] *= scale
         input_df.to_csv(output_filename,header=True,index_label = False, sep = ' ')
+        self.filename = output_filename
         
     def launchParticles(self):
         PlanetsFactory.getInstance()
