@@ -11,22 +11,19 @@ import os
 import pandas as pd
 import glob
 import scipy
-
 import sys
 import argparse
 import pypart
 from pypart import MaterialPointsFactory, ParticlesFactoryInterface
-from pypart import PingPongBallsFactory, PlanetsFactory
+from pypart import PlanetsFactory
 from pypart import CsvWriter
-from pypart import ComputeTemperature
 from pypart import ComputeGravity
 from pypart import ComputeVerletIntegration
 
 
 
-#class optimiser:
 def readPositions(planet_name,directory):
-    filelist = sorted(glob.glob(os.path.join(setdir, './step-*.csv')))
+    filelist = sorted(glob.glob(os.path.join(directory, './step-*.csv')))
     if len(filelist) != 365:
         raise Exception('The length of the input datafile is not 365!')
     trajectory = np.empty((0,3), float)
@@ -88,20 +85,18 @@ def runAndComputeError(scale,planet_name,input_file,nb_steps,freq):
     output_filename = 'init_scaled.csv'
     generateInput(scale,planet_name,input_filename,output_filename)
     launchParticles(output_filename, nb_steps, freq)
-    positions = readPositions(planet_name, 'dumps')
-    positions_ref = readPositions(planet_name, 'trajectory')
+    positions = readPositions(planet_name, '/dumps')
+    positions_ref = readPositions(planet_name, '../trajectories')
     err = computeError(positions, positions_ref)
     
     return err
 
 def optimiser(planet_name,input_file,nb_steps,freq):
     x0 = 1
-    scipy.optimize.fmin(runAndComputeError, x0)
-    
-    
-    
-
-                
+    scaling_factor = scipy.optimize.fmin(runAndComputeError, x0, args=(planet_name,input_file,nb_steps,freq))
+    print('The scaling factor is equal to ' + scaling_factor)
+    return scaling_factor
+                    
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Particles code optimiser')
@@ -112,13 +107,13 @@ if __name__ == "__main__":
                         help='specify the frequency for dumps',
                         default = 1)
     parser.add_argument('filename', type=str,
-                        help='start/input filename')
+                        help='start/input filename',
+                        default = '../init.csv')
     parser.add_argument('timestep', type=float,
                         help='timestep',
                         default = 1)
     
     input_filename = 'init.csv'
-    scale = 2
     cwd = os.getcwd()
     setdir = cwd + '/trajectories'                    
     planet_name = 'mercury'
@@ -128,8 +123,4 @@ if __name__ == "__main__":
     freq = args.freq
     filename = args.filename
     timestep = args.timestep
-
-
-
-    traj = readPositions(planet_name,setdir)
-
+    
