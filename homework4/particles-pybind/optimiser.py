@@ -83,7 +83,7 @@ def launchParticles(input_file,nb_steps,freq,timestep):
     
 def runAndComputeError(scale,planet_name,input_file,nb_steps,freq,timestep):
     output_filename = 'init_scaled.csv'
-    generateInput(scale,planet_name,input_filename,output_filename)
+    generateInput(scale,planet_name,input_file,output_filename)
     launchParticles(output_filename, nb_steps, freq,timestep)
     positions = readPositions(planet_name, os.getcwd() + '/dumps')
     positions_ref = readPositions(planet_name, os.getcwd() + '../trajectories')
@@ -106,15 +106,19 @@ def callback(xk,planet_name,input_file,nb_steps,freq,timestep):
 
 def optimiser(planet_name,input_file,nb_steps,freq,timestep):
     x0 = 1
-    history = []
     history.append(np.transpose(np.r_[x0, runAndComputeError(x0,planet_name,input_file,nb_steps,freq,timestep)]))
     scaling_factor = scipy.optimize.fmin(runAndComputeError, x0, args=(planet_name,input_file,nb_steps,freq,timestep), callback = callback(planet_name,input_file,nb_steps,freq,timestep))
     print('The scaling factor is equal to ' + scaling_factor)
     return scaling_factor
 
-#def plot(history):
-    
-                    
+def plot(history):
+    fig = plt.figure()
+    fig.plot(history[:,0], history[:,1])
+    fig.set_xlabel('scale', fontsize=8)
+    fig.set_ylabel('error', fontsize=8)
+    plt.title('Scipy optimisation', fontsize=12)
+    fig.savefig('optimization.pdf', format='pdf')   
+          
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Particles code optimiser')
@@ -142,6 +146,6 @@ if __name__ == "__main__":
     filename = args.filename
     timestep = args.timestep
     planet_name = args.planet_name
-    
+    history = []
     optimiser(planet_name,filename,nb_steps,freq,timestep)
     plot()
