@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 13 11:30:23 2021
-
-@author: cristiano
-"""
-
 import numpy as np
 import os
 import pandas as pd
@@ -93,8 +85,8 @@ class Optimiser:
         #input_df.loc[input_df.name == planet_name, ['VX','VY','VZ']] *= scale
         row_index = input_df.index.get_loc(input_df.index[input_df['name'] == self.planet_name][0])
         input_df.iloc[row_index,3:6] *= scale
-        input_df.to_csv(output_filename,header=True,index_label = False, sep = ' ')
-        self.filename = output_filename
+        input_df.to_csv(output_filename,header=True,index_label = False, index = False, sep = ' ')
+        self.filename_new = output_filename
         
     def launchParticles(self):
         """Launch the particle solver and save dumps in a given folder.
@@ -125,7 +117,7 @@ class Optimiser:
                 help(compute_grav)
                 raise e
         
-        evol = factory.createSimulation(self.filename, self.timestep, createComputes)
+        evol = factory.createSimulation(self.filename_new, self.timestep, createComputes)
     
         dumper = CsvWriter("out.csv")
         dumper.write(evol.getSystem())
@@ -172,7 +164,7 @@ class Optimiser:
         Input: none.
         Output: the scaling parameter.
         """
-        x0 = 1
+        x0 = 3
         self.history.append(np.transpose(np.r_[x0, self.runAndComputeError(x0)]))
         #history= np.append(history, [[x0, runAndComputeError(x0,planet_name,input_file,nb_steps,freq,timestep)]], axis = 0)
         scaling_factor = soo.fmin(self.runAndComputeError, x0, callback = self.callback)
