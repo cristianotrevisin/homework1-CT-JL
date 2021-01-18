@@ -41,7 +41,7 @@ def computeError(planet_name):
             return trajectory
         
         positions = readPositions(planet_name, os.getcwd() + '/dumps')
-        positions_ref = readPositions(planet_name, os.getcwd() +'../trajectories')
+        positions_ref = readPositions(planet_name, '../trajectories')
         SSR = 0
         for i in range(365):
             for j in range(3):
