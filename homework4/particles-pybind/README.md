@@ -42,14 +42,16 @@ We ensure correct management of the `Compute` object using shared pointers as ob
 
 ### Exercice 4.4
 We verified the error relative to the trajectory of each one of the planets with a scaling factor equal to 1 (no correction of velocity). The following results are found: 
-| Planet  	| Error 	|
+| Planet  	| Error (UA)	|
 |---------	|-------	|
 | Sun     	| 0      	|
-| Mercury 	|       	|
-| Neptune 	|       	|
-| Jupiter 	|       	|
-| Uranus  	|       	|
-| Mars    	|       	|
-| Earth   	|       	|
-| Venus   	|       	|
-| Saturn  	|       	|
+| Mercury 	| 165.10      	|
+| Neptune 	| 0.06      	|
+| Jupiter 	| 0.14      	|
+| Uranus  	| 0.07      	|
+| Mars    	| 0.62      	|
+| Earth   	| 0.63      	|
+| Venus   	| 0.79      	|
+| Saturn  	| 0.11      	|
+
+As the table shows, the simulated positions diverge little from the actual observed trajectories for all planets except for Mercury.
