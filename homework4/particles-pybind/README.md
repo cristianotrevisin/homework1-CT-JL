@@ -16,7 +16,7 @@ python3.8 main.py 365 1 ../init.csv planet 1
 ```
 
 ### Optimiser
-The optimiser is aimed at correcting the initial velocity for Mercury in the `init.csv`file to yield the correct position. To do this, a scaling factor that multiplies the magnitude of the initial velocities (in the three directions) is introduced and a minimiser function from the package Scipy is used to calculate the correct vector of this scaling parameter. After launching the optimiser function, the user will find in the directory the plot of the scipy chain, the file with the corrected initial velocity `init_scaled.csv` and on screen the value of the scaling parameter. To launch the optimiser, the end user should hit the following commands:
+The optimiser is aimed at correcting the initial velocity for Mercury in the `init.csv`file to yield the correct position. To do this, a scaling factor that multiplies the magnitude of the initial velocities (in the three directions) is introduced and a minimiser function from the package Scipy is used to calculate the correct vector of this scaling parameter. After launching the optimiser function, the user will find in the directory the plot of the scipy chain (`optimization.pdf`), the file with the corrected initial velocity `init_scaled.csv` and on screen the results of the simulation. To launch the optimiser, the end user should hit the following commands:
 ```
 mkdir build
 cd build
@@ -32,6 +32,7 @@ Since the optimiser is written to correct the initial velocity for a planet, we 
 python3.8 optimiser.py
 ```
 The optimiser script is written using a class scheme to allow better factorisation and management of the arguments. For this reason, the function may have slightly different input to those requested in the project, as fundamental arguments (i.e. frequency, number of steps, pianet name, and timestep) are managed as objects of the class. 
+
 
 ## Answers to questions
 ### Exercise 1.2
