@@ -39,3 +39,17 @@ The optimiser script is written using a class scheme to allow better factorisati
 
 ### Exercice 2.2
 We ensure correct management of the `Compute` object using shared pointers as object holder. It is a type of CPP smartpointers that allows objects to be passed beyond the scope they are defined for, but counts the references and deletes the object if there is no more references attached to it, so we avoid memory leak or deleting twice the same pointer.
+
+### Exercice 4.4
+We verified the error relative to the trajectory of each one of the planets with a scaling factor equal to 1 (no correction of velocity). The following results are found: 
+| Planet  	| Error 	|
+|---------	|-------	|
+| Sun     	| 0      	|
+| Mercury 	|       	|
+| Neptune 	|       	|
+| Jupiter 	|       	|
+| Uranus  	|       	|
+| Mars    	|       	|
+| Earth   	|       	|
+| Venus   	|       	|
+| Saturn  	|       	|
