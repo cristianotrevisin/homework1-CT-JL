@@ -99,7 +99,6 @@ class Optimiser:
     
         def createComputes(self, timestep):  
             try:
-                print(timestep)
                 compute_grav = ComputeGravity()
                 compute_verlet = ComputeVerletIntegration(timestep)
         
