@@ -97,10 +97,11 @@ class Optimiser:
         PlanetsFactory.getInstance()
         factory = ParticlesFactoryInterface.getInstance()
     
-        def createComputes(self):  
+        def createComputes(self, timestep):  
             try:
+                print(timestep)
                 compute_grav = ComputeGravity()
-                compute_verlet = ComputeVerletIntegration(self.timestep)
+                compute_verlet = ComputeVerletIntegration(timestep)
         
                 G = 6.67384e-11 # m^3 * kg^-1 * s^-2
                 UA = 149597870.700 # km
